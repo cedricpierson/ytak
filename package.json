@@ -1,0 +1,26 @@
+{
+  "name": "nextjs-starter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "lint:es": "eslint --ext .js,.jsx .",
+    "lint:fix": "eslint --fix --ext .js,.jsx .",
+    "prepare": "husky install",
+    "test": "npm run"
+  },
+  "dependencies": {
+    "eslint": "8.29.0",
+    "eslint-config-next": "13.0.6",
+    "husky": "^8.0.2",
+    "next": "13.0.6",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "prettier": "^2.8.0"
+  }
+}
