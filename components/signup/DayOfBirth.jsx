@@ -9,9 +9,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { Box } from '@mui/material';
 
-export default function DayOfBirth() {
-  const [value, setValue] = React.useState(dayjs('2022-04-07'));
-
+export default function DayOfBirth({ value, setValue }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
       <Stack spacing={3}>
@@ -21,7 +19,7 @@ export default function DayOfBirth() {
             label="Date de naissance"
             value={value}
             onChange={(newValue) => {
-              setValue(newValue);
+              setValue(dayjs(newValue).format('DD/MM/YYYY'));
             }}
             renderInput={(params) => <TextField {...params} />}
           />
@@ -31,9 +29,11 @@ export default function DayOfBirth() {
             disableFuture
             label="Date de naissance"
             value={value}
-            minDate={dayjs('2017-01-01')}
+            minDate={dayjs('1900-01-01')}
+            maxDate={dayjs()}
             onChange={(newValue) => {
-              setValue(newValue);
+              setValue(dayjs(newValue).format('DD/MM/YYYY'));
+              console.log(dayjs(newValue).format('DD/MM/YY'));
             }}
             renderInput={(params) => <TextField {...params} />}
           />

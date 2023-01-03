@@ -1,5 +1,6 @@
 import { filter } from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 // @mui
 import {
   Card,
@@ -24,7 +25,7 @@ import {
 // components
 // sections
 // mock
-import USERLIST from '../../_mock/user';
+// import USERLIST from '../../_mock/user';
 import UserListToolbar from '../../components/UserListToolbar';
 import UserListHead from '../../components/UserListHead';
 import UserDataGrid from '../../components/UserDataGrid';
@@ -37,7 +38,7 @@ import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'title', label: 'Titre', alignRight: false },
+  { id: 'name', label: 'Titre', alignRight: false },
   { id: 'category', label: 'Catégorie', alignRight: false },
   { id: 'numberOfVideos', label: 'Nombre de vidéos', alignRight: false },
   { id: 'online', label: 'ONLINE', alignRight: false },
@@ -75,7 +76,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Users() {
+export default function Masterclass() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -89,6 +90,17 @@ export default function Users() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [masterclass, setMasterclass] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/masterclass')
+      .then((res) => {
+        setMasterclass(res.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -106,7 +118,7 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = masterclass.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -142,9 +154,9 @@ export default function Users() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - masterclass.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(masterclass, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
   const title = 'Masterclass';
@@ -179,14 +191,14 @@ export default function Users() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={masterclass.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, status, email, dateExpiration, avatarUrl } = row;
+                    const { id, name, status, description, channelId, imageUrl } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -197,16 +209,16 @@ export default function Users() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={name} src={imageUrl} />
                             <Typography variant="subtitle2" noWrap>
                               {name}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{description}</TableCell>
 
-                        <TableCell align="left">{dateExpiration.toLocaleDateString()}</TableCell>
+                        <TableCell align="left">{channelId}</TableCell>
 
                         <TableCell align="left">
                           <Label color={(status === 'premium' && 'warning') || 'success'}>{status}</Label>
@@ -254,7 +266,7 @@ export default function Users() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={masterclass.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

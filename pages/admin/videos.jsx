@@ -1,5 +1,6 @@
 import { filter } from 'lodash';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 // @mui
 import {
   Card,
@@ -21,27 +22,24 @@ import {
   TablePagination,
   Box,
 } from '@mui/material';
-// components
-// sections
+
 // mock
-import USERLIST from '../../_mock/user';
+// import USERLIST from '../../_mock/user';
 import UserListToolbar from '../../components/UserListToolbar';
 import UserListHead from '../../components/UserListHead';
-import UserDataGrid from '../../components/UserDataGrid';
 import Label from '../../components/label';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import SideNav from '../../components/layouts/admin/nav/SideNav';
 import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'title', label: 'Titre', alignRight: false },
-  { id: 'category', label: 'Catégorie', alignRight: false },
-  { id: 'masterclass', label: 'Masterclass', alignRight: false },
-  { id: 'url', label: 'URL', alignRight: false },
+  { id: 'description', label: 'Description', alignRight: false },
+  { id: 'status', label: 'status', alignRight: false },
   { id: 'online', label: 'ONLINE', alignRight: false },
+  { id: 'url', label: 'URL', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -70,12 +68,12 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.title.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function Users() {
+export default function Videos() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -89,6 +87,17 @@ export default function Users() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [videos, setVideos] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/videos')
+      .then((res) => {
+        setVideos(res.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -106,7 +115,7 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.title);
+      const newSelecteds = videos.map((n) => n.title);
       setSelected(newSelecteds);
       return;
     }
@@ -142,9 +151,9 @@ export default function Users() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - videos.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(videos, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
   const title = 'Vidéos';
@@ -179,34 +188,34 @@ export default function Users() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={videos.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, status, email, dateExpiration, avatarUrl } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, title, description, status, online, url } = row;
+                    const selectedUser = selected.indexOf(title) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, title)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={title} src="" />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {title}
                             </Typography>
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{}</TableCell>
 
-                        <TableCell align="left">{dateExpiration.toLocaleDateString()}</TableCell>
+                        <TableCell align="left">{description}</TableCell>
 
                         <TableCell align="left">
                           <Label color={(status === 'premium' && 'warning') || 'success'}>{status}</Label>
@@ -254,7 +263,7 @@ export default function Users() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={videos.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

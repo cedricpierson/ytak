@@ -1,13 +1,13 @@
-import { Box } from "@mui/material";
-import React from "react";
-import DashboardContent from "../../components/layouts/admin/nav/Dashboard";
-import Stats from "../../components/Stats";
+import { Box } from '@mui/material';
+import React from 'react';
+import DashboardContent from '../../components/layouts/admin/nav/Dashboard';
+import Stats from '../../components/Stats';
 
-const Admin = () => {
-  const title = "Dashboard";
+const Dashboard = () => {
+  const title = 'Dashboard';
   return (
     <>
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: 'flex' }}>
         <DashboardContent title={title} />
         <Stats />
       </Box>

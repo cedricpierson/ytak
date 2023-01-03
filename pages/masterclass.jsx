@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'; // Grid version 1
 import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
@@ -30,10 +30,25 @@ export async function getServerSideProps() {
 }
 
 const Masterclass = ({ data }) => {
+  const videoRef = useRef();
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const handleClick = () => setOpen(!open);
+  const [video, setVideo] = useState('');
+  // const handleClose = () => setOpen(false);
+  // const handleClick = () => setOpen(!open);
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (open && videoRef.current && !videoRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handler);
+
+    return () => {
+      document.removeEventListener('mousedown', handler);
+    };
+  }, [open]);
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -77,7 +92,6 @@ const Masterclass = ({ data }) => {
             Masterclass avec <span style={{ color: '#519657' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>
           </Typography>
         </Box>
-
         <Grid
           container
           rowSpacing={1}
@@ -89,54 +103,57 @@ const Masterclass = ({ data }) => {
             borderRadius: '5px',
           }}
         >
-          {data.items.map((item) => {
-            const { id, snippet = {}, contentDetails = {} } = item;
-            const { videoId } = contentDetails;
-            const { title, thumbnails = {} } = snippet;
-            const { medium = {} } = thumbnails;
-            return (
-              <motion.div
-                key=""
-                whileHover={{
-                  scale: 1.2,
-                  zIndex: '1',
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-                whileTap={{ scale: 0.8 }}
-              >
-                <Button
-                  onClick={handleOpen}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    padding: '1rem',
-                    backgroundColor: 'grey.400',
-                    borderRadius: '5px',
-                    margin: '0.2rem',
+          {!open &&
+            data.items.map((item) => {
+              const { id, snippet = {}, contentDetails = {} } = item;
+              const { videoId } = contentDetails;
+              const { title, thumbnails = {} } = snippet;
+              const { medium = {} } = thumbnails;
+              return (
+                <motion.div
+                  whileHover={{
+                    scale: 1.2,
+                    zIndex: '1',
+                    transition: {
+                      default: { ease: 'linear' },
+                    },
                   }}
+                  whileTap={{ scale: 0.8 }}
                 >
-                  {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
-                  {/* {title} */}
-                </Button>
-              </motion.div>
-            );
-          })}
+                  <Button
+                    key={item.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setOpen(true);
+                      setVideo(item.contentDetails.videoId);
+                    }}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'row',
+                      padding: '1rem',
+                      backgroundColor: 'grey.400',
+                      borderRadius: '5px',
+                      margin: '0.2rem',
+                    }}
+                  >
+                    {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
+                  </Button>
+                </motion.div>
+              );
+            })}
           {open && (
-            <Box>
-              <iframe
-                width="560"
-                height="315"
-                src=""
-                title="Player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              />
-            </Box>
+            <iframe
+              ref={videoRef}
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${video}`}
+              title="Player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            />
           )}
         </Grid>
       </div>

@@ -1,5 +1,7 @@
+import axios from 'axios';
 import { filter } from 'lodash';
-import { useState } from 'react';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Card,
@@ -24,7 +26,7 @@ import {
 // components
 // sections
 // mock
-import USERLIST from '../../_mock/user';
+// import USERLIST from '../../_mock/user';
 import UserListToolbar from '../../components/UserListToolbar';
 import UserListHead from '../../components/UserListHead';
 import Label from '../../components/label';
@@ -32,13 +34,14 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 import Head from 'next/head';
+import api from '../../services/api';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Nom', alignRight: false },
+  { id: 'lastname', label: 'Nom', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
-  { id: 'dateExpiration', label: "Date d'expiration", alignRight: false },
+  { id: 'dayOfBirth', label: 'Date de naissance', alignRight: false },
   { id: 'status', label: 'Status', alignRight: false },
   { id: '' },
 ];
@@ -69,7 +72,7 @@ function applySortFilter(array, comparator, query) {
     return a[1] - b[1];
   });
   if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
+    return filter(array, (_user) => _user.firstname.toLowerCase().indexOf(query.toLowerCase()) !== -1);
   }
   return stabilizedThis.map((el) => el[0]);
 }
@@ -83,11 +86,22 @@ export default function Users() {
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('lastname');
 
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get('http://localhost:5000/api/users')
+      .then((res) => {
+        setUsers(res.data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -105,18 +119,18 @@ export default function Users() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.lastname);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, lastname) => {
+    const selectedIndex = selected.indexOf(lastname);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, lastname);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -141,9 +155,9 @@ export default function Users() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
   const title = 'Utilisateurs';
@@ -178,7 +192,7 @@ export default function Users() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
@@ -186,27 +200,27 @@ export default function Users() {
 
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, status, email, dateExpiration, avatarUrl } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, lastname, status, email, dayOfBirth, avatarUrl } = row;
+                    const selectedUser = selected.indexOf(lastname) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, lastname)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={avatarUrl} />
+                            <Avatar alt={lastname} src={avatarUrl} />
                             <Typography variant="subtitle2" noWrap>
-                              {name}
+                              {lastname}
                             </Typography>
                           </Stack>
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
 
-                        <TableCell align="left">{dateExpiration.toLocaleDateString()}</TableCell>
+                        <TableCell align="left">{dayjs(dayOfBirth).format('DD/MM/YYYY')}</TableCell>
 
                         <TableCell align="left">
                           <Label color={(status === 'premium' && 'warning') || 'success'}>{status}</Label>
@@ -254,7 +268,7 @@ export default function Users() {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={USERLIST.length}
+              count={users.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

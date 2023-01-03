@@ -250,7 +250,7 @@ const Signin = () => {
                     data="signin"
                     sx={{ width: '6rem', height: '6rem', borderRadius: '50%' }}
                     variant="contained"
-                    // onClick={() => signIn()}
+                    onClick={() => signIn()}
                   >
                     Entrer
                   </Button>

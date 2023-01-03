@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
+import dayjs from 'dayjs';
 import GoogleIcon from '@mui/icons-material/Google';
 import {
   Button,
@@ -26,9 +28,13 @@ import DayOfBirth from '../components/signup/DayOfBirth';
 import 'dayjs/locale/fr';
 
 const Signup = () => {
+  const [value, setValue] = useState(dayjs());
   const [values, setValues] = useState({
-    userName: '',
+    email: '',
     password: '',
+    lastname: '',
+    firstname: '',
+    dayOfBirth: { value },
     rememberMe: false,
     showPassword: false,
   });
@@ -47,6 +53,24 @@ const Signup = () => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
+  const handleClickSignUp = (e) => {
+    e.preventDefault();
+    const userData = {
+      email: values.email,
+      password: values.password,
+      firstname: values.firstname,
+      lastname: values.lastname,
+      dayOfBirth: value.dayOfBirth,
+      rememberMe: values.rememberMe,
+    };
+    axios.post('http://localhost:5000/auth/signup', userData).then((response) => {
+      console.log(response.status);
+      console.log(response.data.token);
+      console.log(response.data);
+    });
+  };
+
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       {/* Animation Background */}
@@ -107,11 +131,13 @@ const Signup = () => {
                   id="demo-helper-text-misaligned-no-helper"
                   label="Prénom"
                   sx={{ width: { xs: 'auto', sm: '20ch' }, marginTop: '0.5rem' }}
+                  onChange={handleChange('firstname')}
                 />
                 <TextField
                   id="demo-helper-text-misaligned-no-helper"
                   label="NOM"
                   sx={{ width: { xs: 'auto', sm: '30ch' }, marginTop: '0.5rem' }}
+                  onChange={handleChange('lastname')}
                 />
               </Stack>
 
@@ -119,7 +145,7 @@ const Signup = () => {
               {/* <Gender /> */}
 
               {/* Day of birth */}
-              <DayOfBirth />
+              <DayOfBirth value={value} setValue={setValue} />
 
               {/* Email */}
               <FormControl variant="standard">
@@ -174,6 +200,7 @@ const Signup = () => {
                       marginTop: '1.5rem',
                     }}
                     variant="contained"
+                    onClick={handleClickSignUp}
                   >
                     S'inscrire
                   </Button>
