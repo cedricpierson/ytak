@@ -1,15 +1,12 @@
 import { Avatar, Box, Card, Container, Paper, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
+import NavMarquee from '../components/navMarquee';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
@@ -54,8 +51,15 @@ const Masterclass = ({ data }) => {
       <div class="bg bg2" />
       <div class="bg bg3" />
       <div class="content">
-        <Box sx={{ margin: '2rem' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              backgroundColor: 'grey.800',
+              borderRadius: '10px',
+            }}
+          >
             <Link href="/">
               <Button
                 sx={{
@@ -71,6 +75,8 @@ const Masterclass = ({ data }) => {
                 </Typography>
               </Button>
             </Link>
+            <NavMarquee />
+
             <motion.div
               whileHover={{
                 scale: 1.03,
@@ -79,14 +85,14 @@ const Masterclass = ({ data }) => {
                 },
               }}
             >
-              <Button>
+              <Button sx={{ top: '4px' }}>
                 <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
                   <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
                 </Paper>
               </Button>
             </motion.div>
           </Box>
-          <Typography variant="h3">
+          <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
             Masterclass avec <span style={{ color: '#519657' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>
           </Typography>
         </Box>

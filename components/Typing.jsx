@@ -1,7 +1,7 @@
 import React from 'react'; // Import the desired words
 import Typed from 'typed.js';
 
-const words = ['DIGITAL', 'TRAVAIL INDÉ', 'NATURE'];
+const words = ['PLATEFORME', 'E-LEARNING'];
 
 class Typing extends React.Component {
   componentDidMount() {

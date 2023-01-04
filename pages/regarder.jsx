@@ -1,15 +1,14 @@
 import { Avatar, Box, Card, Container, Paper, Stack } from '@mui/material';
 import Grid from '@mui/material/Grid'; // Grid version 1
-import Grid2 from '@mui/material/Unstable_Grid2'; // Grid version 2
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
+import NavMarquee from '../components/navMarquee';
+import DotsLeftMarquee from '../components/dotsLeftMarquee';
+import DotsRightMarquee from '../components/dotsRightMarquee';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
@@ -29,7 +28,7 @@ export async function getServerSideProps() {
   };
 }
 
-const Masterclass = ({ data }) => {
+const Regarder = ({ data }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -49,46 +48,70 @@ const Masterclass = ({ data }) => {
   }, [open]);
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+    <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div class="bg" />
       <div class="bg bg2" />
       <div class="bg bg3" />
       <div class="content">
-        <Box sx={{ margin: '2rem' }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Link href="/">
-              <Button
-                sx={{
-                  backgroundColor: 'secondary.dark',
-                  margin: 0,
-                  '&:hover': {
-                    backgroundColor: 'primary.dark',
+        <Box sx={{ backgroundColor: 'grey.800', height: '350px', margin: '0' }}>
+          <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                backgroundColor: 'grey.800',
+                borderRadius: '10px',
+              }}
+            >
+              <Link href="/">
+                <Typography variant="hs" fontFamily="Expletus Sans" color="grey.200">
+                  YTAK
+                </Typography>
+                <Typography variant="h3" fontFamily="Expletus Sans" color="grey.200" mt="-1.5rem">
+                  MasterClasses
+                </Typography>
+              </Link>
+
+              <motion.div
+                whileHover={{
+                  scale: 1.03,
+                  transition: {
+                    default: { ease: 'linear' },
                   },
                 }}
               >
-                <Typography variant="h1" fontFamily="Expletus Sans" color="initial">
-                  YTAK
-                </Typography>
-              </Button>
-            </Link>
-            <motion.div
-              whileHover={{
-                scale: 1.03,
-                transition: {
-                  default: { ease: 'linear' },
-                },
-              }}
-            >
-              <Button>
-                <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
-                  <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
-                </Paper>
-              </Button>
-            </motion.div>
+                <Button sx={{ top: '4px', borderRadius: '50%' }}>
+                  <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
+                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
+                  </Paper>
+                </Button>
+              </motion.div>
+            </Box>
           </Box>
-          <Typography variant="h3">
-            Masterclass avec <span style={{ color: '#519657' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>
+        </Box>
+        <Box sx={{ margin: '0 0 1.5rem 0' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              backgroundColor: 'grey.800',
+            }}
+          >
+            <NavMarquee />
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Sélection
           </Typography>
+          {/* <DotsRightMarquee /> */}
         </Box>
         <Grid
           container
@@ -154,9 +177,10 @@ const Masterclass = ({ data }) => {
             />
           )}
         </Grid>
+        {/* <DotsLeftMarquee /> */}
       </div>
-    </Container>
+    </Stack>
   );
 };
 
-export default Masterclass;
+export default Regarder;

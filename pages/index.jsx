@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Container, Link, Stack, Typography } from '@mui/material';
 import Typing from '../components/Typing';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
@@ -44,6 +44,28 @@ const index = () => {
           </Stack>
         </div>
       </Container>
+      <Box sx={{ position: 'relative', right: '100px', bottom: '100px' }}>
+        <Link href="/regarder">
+          <Button
+            sx={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              borderRadius: '50%',
+              width: '200px',
+              height: '200px',
+              backgroundColor: 'primary.main',
+              color: 'grey.800',
+              '&:hover': {
+                color: 'primary.lighter',
+                backgroundColor: 'primary.darker',
+              },
+            }}
+          >
+            <Typography variant="h3">Entrer</Typography>
+          </Button>
+        </Link>
+      </Box>
       <Stack
         sx={{
           display: 'flex',
@@ -95,7 +117,12 @@ const index = () => {
               {' '}
               Travail indé{' '}
             </Link>
-            -<Link href="/"> Nature </Link>-
+            -
+            <Link href="/" sx={{ textDecoration: 'none' }}>
+              {' '}
+              Nature{' '}
+            </Link>
+            -
           </Typography>
         </Marquee>
         {/* <Marquee gradient={0} pauseOnHover>
