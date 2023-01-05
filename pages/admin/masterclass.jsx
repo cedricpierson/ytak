@@ -38,11 +38,11 @@ import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Titre', alignRight: false },
-  { id: 'category', label: 'Catégorie', alignRight: false },
-  { id: 'numberOfVideos', label: 'Nombre de vidéos', alignRight: false },
-  { id: 'online', label: 'ONLINE', alignRight: false },
-  { id: '' },
+  { id: 'id', label: 'ID', alignRight: false },
+  { id: 'title', label: 'Titre', alignRight: false },
+  { id: 'playlistId', label: 'Playlist ID', alignRight: false },
+  { id: 'category_id', label: 'Catégorie', alignRight: false },
+  { id: 'isPremium', label: 'Premium', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -129,7 +129,7 @@ export default function Masterclass() {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, title);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -198,30 +198,27 @@ export default function Masterclass() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, status, description, channelId, imageUrl } = row;
-                    const selectedUser = selected.indexOf(name) !== -1;
+                    const { id, title, playlistId, category_id, isPremium } = row;
+                    const selectedUser = selected.indexOf(title) !== -1;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
-                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
+                          <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, title)} />
                         </TableCell>
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={name} src={imageUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {name}
-                            </Typography>
+                            <Avatar alt={title} src="" />
                           </Stack>
                         </TableCell>
 
-                        <TableCell align="left">{description}</TableCell>
-
-                        <TableCell align="left">{channelId}</TableCell>
+                        <TableCell align="left">{title}</TableCell>
+                        <TableCell align="left">{playlistId}</TableCell>
+                        <TableCell align="left">{category_id}</TableCell>
 
                         <TableCell align="left">
-                          <Label color={(status === 'premium' && 'warning') || 'success'}>{status}</Label>
+                          <Label color={(isPremium === 'premium' && 'warning') || 'success'}>{isPremium}</Label>
                         </TableCell>
 
                         <TableCell align="right">

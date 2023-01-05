@@ -45,7 +45,7 @@ const index = () => {
         </div>
       </Container>
       <Box sx={{ position: 'relative', right: '100px', bottom: '100px' }}>
-        <Link href="/regarder">
+        <Link href="/signin">
           <Button
             sx={{
               position: 'absolute',
