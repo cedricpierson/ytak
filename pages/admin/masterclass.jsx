@@ -39,6 +39,7 @@ import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 
 const TABLE_HEAD = [
   { id: 'id', label: 'ID', alignRight: false },
+  { id: 'channel', label: 'Chaîne', alignRight: false },
   { id: 'title', label: 'Titre', alignRight: false },
   { id: 'playlistId', label: 'Playlist ID', alignRight: false },
   { id: 'category_id', label: 'Catégorie', alignRight: false },
@@ -198,7 +199,7 @@ export default function Masterclass() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, title, playlistId, category_id, isPremium } = row;
+                    const { id, channel, title, playlistId, category_id, isPremium } = row;
                     const selectedUser = selected.indexOf(title) !== -1;
 
                     return (
@@ -213,6 +214,7 @@ export default function Masterclass() {
                           </Stack>
                         </TableCell>
 
+                        <TableCell align="left">{channel}</TableCell>
                         <TableCell align="left">{title}</TableCell>
                         <TableCell align="left">{playlistId}</TableCell>
                         <TableCell align="left">{category_id}</TableCell>

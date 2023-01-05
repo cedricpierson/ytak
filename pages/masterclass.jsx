@@ -10,11 +10,11 @@ import NavMarquee from '../components/navMarquee';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
-const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
+const playlistId = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
   const res = await fetch(
-    `${YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=12&key=${process.env.YOUTUBE_API_KEY}`
+    `${YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${playlistId}&maxResults=12&key=${process.env.YOUTUBE_API_KEY}`
   );
 
   const data = await res.json();

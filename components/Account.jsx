@@ -31,6 +31,11 @@ const Account = () => {
       <div class="bg bg2" />
       <div class="bg bg3" />
       <div class="content">
+        <Box>
+          <Typography variant="h3" sx={{ color: 'grey.800', textAlign: 'center', maxWidth: '20ch' }}>
+            "La clé de l'apprentissage c'est de faire se rencontrer le meilleur de soi et le pro qui est en nous."
+          </Typography>
+        </Box>
         <Stack
           style={{
             display: 'flex',
