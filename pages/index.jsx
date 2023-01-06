@@ -133,7 +133,9 @@ const index = () => {
           </Typography>
         </Marquee> */}
       </Stack>
-      <Account />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+        <Account />
+      </Box>
     </>
   );
 };
