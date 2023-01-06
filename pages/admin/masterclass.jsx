@@ -42,7 +42,7 @@ const TABLE_HEAD = [
   { id: 'channel', label: 'Chaîne', alignRight: false },
   { id: 'title', label: 'Titre', alignRight: false },
   { id: 'playlistId', label: 'Playlist ID', alignRight: false },
-  { id: 'category_id', label: 'Catégorie', alignRight: false },
+  { id: 'categoryId', label: 'Catégorie', alignRight: false },
   { id: 'isPremium', label: 'Premium', alignRight: false },
 ];
 
@@ -199,7 +199,7 @@ export default function Masterclass() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, channel, title, playlistId, category_id, isPremium } = row;
+                    const { id, channel, title, playlistId, categoryId, isPremium } = row;
                     const selectedUser = selected.indexOf(title) !== -1;
 
                     return (
@@ -217,7 +217,7 @@ export default function Masterclass() {
                         <TableCell align="left">{channel}</TableCell>
                         <TableCell align="left">{title}</TableCell>
                         <TableCell align="left">{playlistId}</TableCell>
-                        <TableCell align="left">{category_id}</TableCell>
+                        <TableCell align="left">{categoryId}</TableCell>
 
                         <TableCell align="left">
                           <Label color={(isPremium === 'premium' && 'warning') || 'success'}>{isPremium}</Label>
