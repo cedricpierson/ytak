@@ -39,11 +39,14 @@ import api from '../../services/api';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'id', label: 'ID', alignRight: false },
   { id: 'lastname', label: 'Nom', alignRight: false },
+  { id: 'firstname', label: 'Prénom', alignRight: false },
   { id: 'email', label: 'Email', alignRight: false },
+  { id: 'phone', label: 'Téléphone', alignRight: false },
+  { id: 'lastConnect', label: 'Dernière connexion', alignRight: false },
   { id: 'dayOfBirth', label: 'Date de naissance', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
+  { id: 'isPremium', label: 'Premium', alignRight: false },
 ];
 
 // ----------------------------------------------------------------------
@@ -200,7 +203,7 @@ export default function Users() {
 
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, lastname, status, email, dayOfBirth, avatarUrl } = row;
+                    const { id, lastname, firstname, email, phone, lastConnect, dayOfBirth, isPremium } = row;
                     const selectedUser = selected.indexOf(lastname) !== -1;
 
                     return (
@@ -211,14 +214,15 @@ export default function Users() {
 
                         <TableCell component="th" scope="row" padding="none">
                           <Stack direction="row" alignItems="center" spacing={2}>
-                            <Avatar alt={lastname} src={avatarUrl} />
-                            <Typography variant="subtitle2" noWrap>
-                              {lastname}
-                            </Typography>
+                            <Avatar alt={lastname} src="{avatarUrl}" />
                           </Stack>
                         </TableCell>
 
+                        <TableCell align="left">{lastname}</TableCell>
+                        <TableCell align="left">{firstname}</TableCell>
                         <TableCell align="left">{email}</TableCell>
+                        <TableCell align="left">{phone}</TableCell>
+                        <TableCell align="left">{dayjs(lastConnect).format('DD/MM/YYYY')}</TableCell>
 
                         <TableCell align="left">{dayjs(dayOfBirth).format('DD/MM/YYYY')}</TableCell>
 

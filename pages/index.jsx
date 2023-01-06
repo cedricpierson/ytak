@@ -3,6 +3,7 @@ import { Box, Button, Container, Link, Stack, Typography } from '@mui/material';
 import Typing from '../components/Typing';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
+import Account from '../components/account';
 
 const index = () => {
   const marqueeVariants = {
@@ -45,7 +46,7 @@ const index = () => {
         </div>
       </Container>
       <Box sx={{ position: 'relative', right: '100px', bottom: '100px' }}>
-        <Link href="/regarder">
+        <Link href="/signin">
           <Button
             sx={{
               position: 'absolute',
@@ -132,6 +133,7 @@ const index = () => {
           </Typography>
         </Marquee> */}
       </Stack>
+      <Account />
     </>
   );
 };
