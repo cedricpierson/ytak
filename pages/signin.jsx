@@ -254,7 +254,7 @@ const Signin = () => {
                   >
                     Entrer
                   </Button>
-                  <Link href="/account">
+                  <Link href="/signup">
                     <Button
                       variant="text"
                       data="signup"

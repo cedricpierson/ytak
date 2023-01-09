@@ -31,11 +31,6 @@ const Account = () => {
       <div class="bg bg2" />
       <div class="bg bg3" />
       <div class="content">
-        <Box>
-          <Typography variant="h3" sx={{ color: 'grey.800', textAlign: 'center', maxWidth: '20ch' }}>
-            "La clé de l'apprentissage c'est de faire se rencontrer le meilleur de soi et le pro qui est en nous."
-          </Typography>
-        </Box>
         <Stack
           style={{
             display: 'flex',
@@ -47,6 +42,11 @@ const Account = () => {
           <Typography variant="h1" fontFamily="Expletus Sans" color="grey.800">
             YTAK
           </Typography>
+
+          <Typography variant="h4" sx={{ color: 'grey.800', textAlign: 'center', maxWidth: '30ch' }}>
+            "La clé de l'apprentissage c'est de faire se rencontrer le meilleur de soi et le pro qui est en nous."
+          </Typography>
+
           <Typography variant="h2" color="grey.100" margin="1rem">
             Faites votre choix
           </Typography>
