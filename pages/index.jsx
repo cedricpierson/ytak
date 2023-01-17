@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Container, Link, Stack, Typography } from '@mui/material';
+import { Box, Button, Container, FormControl, InputLabel, Link, Stack, TextField, Typography } from '@mui/material';
 import Typing from '../components/Typing';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
@@ -26,6 +26,7 @@ const index = () => {
         <div class="bg" />
         <div class="bg bg2" />
         <div class="bg bg3" />
+
         <div class="content">
           <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
             <Typography variant="h1" fontFamily="Expletus Sans" color="initial">
@@ -45,6 +46,7 @@ const index = () => {
           </Stack>
         </div>
       </Container>
+
       <Box sx={{ position: 'relative', right: '100px', bottom: '100px' }}>
         <Link href="/signin">
           <Button

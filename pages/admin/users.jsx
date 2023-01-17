@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
+import CachedIcon from '@mui/icons-material/Cached';
 import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 import Head from 'next/head';
+import dayjs from 'dayjs';
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer>
+    <GridToolbarContainer sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Button onClick={() => window.location.reload()}>
+        <CachedIcon />
+        Actualiser
+      </Button>
       <GridToolbarExport />
     </GridToolbarContainer>
   );
@@ -20,13 +26,17 @@ export default function Users() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/users')
+      .get('http://localhost:5001/api/users')
       .then((res) => {
         setUsers(res.data);
       })
       .catch((error) => console.error(error));
   }, []);
   const title = 'Utilisateurs';
+
+  function getCar(params) {
+    return `${params.cars.model}`;
+  }
 
   return (
     <>
@@ -41,8 +51,9 @@ export default function Users() {
             Utilisateurs
           </Typography>
 
-          <div style={{ height: 300, width: '100%' }}>
+          <div style={{ height: '90vh', width: '100%' }}>
             {console.log(users)}
+
             <DataGrid
               rows={users}
               loading={!users}
@@ -53,14 +64,27 @@ export default function Users() {
               checkboxSelection={checkboxSelection}
               experimentalFeatures={{ newEditingApi: true }}
               columns={[
-                { field: 'id', headerName: 'ID', editable: true },
-                { field: 'lastname', headerName: 'Nom', editable: true },
-                { field: 'firstname', headerName: 'Prénom', editable: true },
-                { field: 'email', headerName: 'Email', editable: true },
-                { field: 'phone', headerName: 'Téléphone', editable: true },
-                { field: 'lastConnect', headerName: 'Dernière connexion', editable: true },
-                { field: 'dayOfBirth', headerName: 'Date de naissance', editable: true },
-                { field: 'isPremium', headerName: 'Premium', editable: true },
+                { field: 'id', headerName: 'ID', editable: true, flex: 0.1 },
+                { field: 'lastname', headerName: 'Nom', editable: true, flex: 1 },
+                { field: 'firstname', headerName: 'Prénom', editable: true, flex: 1 },
+                { field: 'email', headerName: 'Email', editable: true, flex: 1.5 },
+                {
+                  type: 'date',
+                  field: 'firstConnect',
+                  headerName: "Date d'inscription",
+                  editable: true,
+                  flex: 1,
+                  valueGetter: ({ value }) => value && new Date(value),
+                },
+                {
+                  type: 'date',
+                  field: 'dayOfBirth',
+                  headerName: 'Date de naissance',
+                  editable: true,
+                  flex: 1,
+                  valueGetter: ({ value }) => value && new Date(value),
+                },
+                { type: 'boolean', field: 'isPremium', headerName: 'Premium', editable: true, flex: 0.6 },
               ]}
             />
           </div>

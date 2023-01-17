@@ -1,8 +1,9 @@
 import NextAuth from 'next-auth';
-import SequelizeAdapter from '@next-auth/sequelize-adapter';
-import { Sequelize } from 'sequelize';
+import SequelizeAdapter, { models } from '@next-auth/sequelize-adapter';
+import Sequelize, { DataTypes } from 'sequelize';
 import GoogleProvider from 'next-auth/providers/google';
 import GitHubProvider from 'next-auth/providers/github';
+
 const mysql = require('mysql2');
 // import EmailProvider from 'next-auth/providers/email';
 
@@ -20,10 +21,10 @@ export default NextAuth({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
+    // GitHubProvider({
+    //   clientId: process.env.GITHUB_ID,
+    //   clientSecret: process.env.GITHUB_SECRET,
+    // }),
     // EmailProvider({
     //   server: {
     //     host: process.env.EMAIL_SERVER_HOST,
@@ -42,5 +43,12 @@ export default NextAuth({
     signOut: '/signin',
   },
   secret: process.env.JWT_SECRET,
-  adapter: SequelizeAdapter(sequelize),
+  adapter: SequelizeAdapter(sequelize, {
+    models: {
+      User: sequelize.define('user', {
+        ...models.User,
+        phoneNumber: DataTypes.STRING,
+      }),
+    },
+  }),
 });
