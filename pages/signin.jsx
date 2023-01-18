@@ -30,7 +30,7 @@ const Signin = () => {
   const { data: session } = useSession();
 
   const [values, setValues] = useState({
-    userName: '',
+    email: '',
     password: '',
     rememberMe: false,
     showPassword: false,
@@ -121,15 +121,24 @@ const Signin = () => {
     );
   }
 
-  const handleSignin = (e) => {
+  const handleSignin = () => {
     const userData = {
-      userName: values.email,
+      email: values.email,
       password: values.password,
     };
     console.log(userData);
     axios.post('http://localhost:5001/auth/signin', userData).then((response) => {
       console.log(response.status);
       console.log(response.data);
+      if (response.data.isAdmin && response.data.isAdmin === true) {
+        localStorage.setItem('isAdmin', true);
+      }
+      if (response.data.isPremium && response.data.isPremium === true) {
+        localStorage.setItem('isPremium', true);
+      }
+      if (response.data.accessToken) {
+        localStorage.setItem('x-access-token', JSON.stringify(response.data.accessToken));
+      }
     });
   };
 

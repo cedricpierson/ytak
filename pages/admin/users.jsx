@@ -25,8 +25,13 @@ export default function Users() {
   const [checkboxSelection, setCheckboxSelection] = useState(true);
 
   useEffect(() => {
+    const adminData = {
+      isAdmin: localStorage.getItem('isAdmin'),
+      accessToken: localStorage.getItem('x-access-token'),
+    };
+    console.log(adminData);
     axios
-      .get('http://localhost:5001/api/users')
+      .get('http://localhost:5001/api/users', adminData)
       .then((res) => {
         setUsers(res.data);
       })

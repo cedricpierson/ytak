@@ -9,7 +9,7 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { Box } from '@mui/material';
 
-export default function DayOfBirth({ value, setValue, errors }) {
+export default function DayOfBirth({ values, setValues, errors }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
       <Stack spacing={3}>
@@ -19,13 +19,13 @@ export default function DayOfBirth({ value, setValue, errors }) {
             disableFuture
             type="date"
             label="Date de naissance"
-            value={value}
+            value={values.birthday}
             onChange={(newValue) => {
-              setValue(dayjs(newValue).format('YYYY/MM/DD'));
+              setValues(dayjs(newValue).format('YYYY/MM/DD'));
             }}
             renderInput={(params) => <TextField {...params} />}
-            error={errors}
-            helperText={errors}
+            error={errors.birthday}
+            helperText={errors.birthday}
           />
         </Box>
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -34,16 +34,16 @@ export default function DayOfBirth({ value, setValue, errors }) {
             disableFuture
             type="date"
             label="Date de naissance"
-            value={value}
+            value={values.birthday}
             minDate={dayjs('1900-01-01')}
             maxDate={dayjs()}
             onChange={(newValue) => {
-              setValue(dayjs(newValue).format('YYYY/MM/DD'));
-              console.log(dayjs(newValue).format('DD/MM/YYYY'));
+              setValues(dayjs(newValue).format('YYYY/MM/DD'));
+              console.log(values.birthday);
             }}
             renderInput={(params) => <TextField {...params} />}
-            error={errors}
-            helperText={errors}
+            error={errors.birthday}
+            helperText={errors.birthday}
           />
         </Box>
       </Stack>

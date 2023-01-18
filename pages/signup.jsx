@@ -3,6 +3,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
 import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import GoogleIcon from '@mui/icons-material/Google';
 import {
   Alert,
@@ -30,10 +31,14 @@ import { Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
 import { Stack } from '@mui/system';
 import DayOfBirth from '../components/signup/DayOfBirth';
 import 'dayjs/locale/fr';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const SignupSchema = Yup.object({
-  firstName: Yup.string().min(2, 'Trop court!').max(50, 'Trop long!').required('Obligatoire'),
-  lastName: Yup.string().min(2, 'Trop court!').max(50, 'Trop long!!').required('Obligatoire'),
+  firstname: Yup.string().min(2, 'Trop court!').max(50, 'Trop long!').required('Obligatoire'),
+  lastname: Yup.string().min(2, 'Trop court!').max(50, 'Trop long!!').required('Obligatoire'),
+  birthday: Yup.date().max(dayjs()).required('Obligatoire'),
   email: Yup.string().email('Email invalide').required('Obligatoire'),
   password: Yup.string()
     .required('Obligatoire')
@@ -49,13 +54,21 @@ const SignupSchema = Yup.object({
 });
 
 const Signup = () => {
+  const [birthday, setBirthday] = useState(dayjs());
+  const [values, setValues] = useState({
+    showPassword: false,
+    showPasswordVerify: false,
+  });
+
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
-      birthday: '',
+      firstname: '',
+      lastname: '',
+      birthday: dayjs(),
       email: '',
       password: '',
+      isPremium: false,
+      isAdmin: false,
       changepassword: '',
     },
     validationSchema: SignupSchema,
@@ -64,17 +77,6 @@ const Signup = () => {
     },
   });
 
-  const [value, setValue] = useState(dayjs());
-  const [values, setValues] = useState({
-    lastname: '',
-    firstname: '',
-    birthday: { value },
-    email: '',
-    password: '',
-    changepassword: '',
-    showPassword: false,
-    showPasswordVerify: false,
-  });
   const [open, setOpen] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -111,11 +113,13 @@ const Signup = () => {
     const userData = {
       firstname: formik.values.firstname,
       lastname: formik.values.lastname,
-      dayOfBirth: formik.values.birthday,
+      dayOfBirth: dayjs(formik.values.birthday).format('YYYY-MM-DD'),
       email: formik.values.email,
       password: formik.values.password,
+      isPremium: false,
+      isAdmin: false,
     };
-    console.log(userData);
+    console.log(userData.isPremium);
 
     axios.post('http://localhost:5001/auth/signup', userData).then((response) => {
       console.log(response.status);
@@ -183,40 +187,74 @@ const Signup = () => {
                   <TextField
                     required
                     id="demo-helper-text-misaligned-no-helper-firstname"
-                    name="firstName"
+                    name="firstname"
                     label="Prénom"
                     type="text"
-                    value={formik.values.firstName}
-                    error={formik.errors.firstName}
+                    value={formik.values.firstname}
+                    error={formik.errors.firstname}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
                     sx={{ width: { xs: 'auto', sm: '20ch' }, marginTop: '0.5rem' }}
-                    helperText={formik.errors.firstName}
+                    helperText={formik.errors.firstname}
                   />
                   <TextField
                     required
                     type="text"
-                    name="lastName"
+                    name="lastname"
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    value={formik.values.lastName}
+                    value={formik.values.lastname}
                     id="demo-helper-text-misaligned-no-helper-lastname"
                     label="NOM"
                     sx={{ width: { xs: 'auto', sm: '30ch' }, marginTop: '0.5rem' }}
-                    error={formik.errors.lastName}
-                    helperText={formik.errors.lastName}
+                    error={formik.errors.lastname}
+                    helperText={formik.errors.lastname}
                   />
                 </Stack>
 
                 {/* Day of birth */}
-                <DayOfBirth
-                  value={value}
-                  setValue={setValue}
-                  errors={formik.errors.birthday}
-                  id="demo-helper-text-misaligned-no-helper"
-                  onChange={formik.handleChange('birthday')}
-                  name="birthday"
-                />
+
+                <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
+                  <Stack spacing={3}>
+                    <Box sx={{ display: { xs: 'block', sm: 'none' }, marginTop: '1rem' }}>
+                      <MobileDatePicker
+                        required
+                        disableFuture
+                        type="date"
+                        dateFormat="dd, mm, yyyy"
+                        label="Date de naissance"
+                        value={formik.values.birthday}
+                        onBlur={formik.handleBlur}
+                        onChange={(value) => {
+                          formik.setFieldValue('birthday', Date.parse(value));
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                        error={formik.errors.birthday}
+                        helperText={formik.errors.birthday}
+                      />
+                    </Box>
+
+                    <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                      <DesktopDatePicker
+                        required
+                        disableFuture
+                        type="date"
+                        label="Date de naissance"
+                        format="MM/dd/yyyy"
+                        value={formik.values.birthday}
+                        minDate={dayjs('1900-01-01')}
+                        maxDate={dayjs()}
+                        onBlur={formik.handleBlur}
+                        onChange={(value) => {
+                          formik.setFieldValue('birthday', Date.parse(value));
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                        error={formik.errors.birthday}
+                        helperText={formik.errors.birthday}
+                      />
+                    </Box>
+                  </Stack>
+                </LocalizationProvider>
 
                 {/* Email */}
                 <FormControl variant="standard" required>
@@ -227,9 +265,9 @@ const Signup = () => {
                       id="input-with-sx"
                       data="username"
                       label="Adresse mail"
+                      value={formik.values.email}
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
-                      value={formik.values.email}
                       type="email"
                       name="email"
                       error={formik.errors.email}
@@ -260,9 +298,9 @@ const Signup = () => {
                       autoComplete="on"
                       data="password"
                       name="password"
+                      value={formik.values.password}
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange}
-                      value={formik.values.password}
                       error={formik.errors.password}
                       helperText={formik.errors.password}
                       InputProps={{
@@ -321,7 +359,7 @@ const Signup = () => {
                 >
                   <Button
                     type="submit"
-                    onSubmit={() => formik.validateForm().then(() => handleClickSignUp)}
+                    onClick={/*() => formik.validateForm().then(() => */ handleClickSignUp}
                     disabled={formik.isSubmitting}
                     elevation={3}
                     data="signup"
