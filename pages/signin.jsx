@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import axios from 'axios';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import GoogleIcon from '@mui/icons-material/Google';
-import GitHubIcon from '@mui/icons-material/GitHub';
+// import GitHubIcon from '@mui/icons-material/GitHub';
 import {
   Button,
   Checkbox,
@@ -29,7 +30,7 @@ const Signin = () => {
   const { data: session } = useSession();
 
   const [values, setValues] = useState({
-    userName: '',
+    email: '',
     password: '',
     rememberMe: false,
     showPassword: false,
@@ -119,12 +120,34 @@ const Signin = () => {
       </Stack>
     );
   }
+
+  const handleSignin = () => {
+    const userData = {
+      email: values.email,
+      password: values.password,
+    };
+    console.log(userData);
+    axios.post('http://localhost:5001/auth/signin', userData).then((response) => {
+      console.log(response.status);
+      console.log(response.data);
+      if (response.data.isAdmin && response.data.isAdmin === true) {
+        localStorage.setItem('isAdmin', true);
+      }
+      if (response.data.isPremium && response.data.isPremium === true) {
+        localStorage.setItem('isPremium', true);
+      }
+      if (response.data.accessToken) {
+        localStorage.setItem('x-access-token', JSON.stringify(response.data.accessToken));
+      }
+    });
+  };
+
   return (
     <Container>
-      <div class="bg" />
-      <div class="bg bg2" />
-      <div class="bg bg3" />
-      <div class="content">
+      <div className="bg" />
+      <div className="bg bg2" />
+      <div className="bg bg3" />
+      <div className="content">
         <Stack
           style={{
             display: 'flex',
@@ -176,7 +199,7 @@ const Signin = () => {
                   >
                     <GoogleIcon />
                   </Button>
-                  <Button
+                  {/* <Button
                     elevation={3}
                     data="signinGitHub"
                     sx={{
@@ -192,7 +215,7 @@ const Signin = () => {
                     onClick={handleOAuthSignIn('github')}
                   >
                     <GitHubIcon />
-                  </Button>
+                  </Button> */}
                 </Box>
               </Box>
               <FormControl variant="standard">
@@ -246,11 +269,12 @@ const Signin = () => {
                   direction="row"
                 >
                   <Button
+                    type="submit"
                     elevation={3}
                     data="signin"
                     sx={{ width: '6rem', height: '6rem', borderRadius: '50%' }}
                     variant="contained"
-                    onClick={() => signIn()}
+                    onClick={handleSignin}
                   >
                     Entrer
                   </Button>

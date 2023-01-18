@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { DataGrid, GridToolbarContainer, GridToolbarExport } from '@mui/x-data-grid';
-import { Container, Typography, Box } from '@mui/material';
+import { Container, Typography, Box, Button } from '@mui/material';
+import CachedIcon from '@mui/icons-material/Cached';
 import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 import Head from 'next/head';
 
 function CustomToolbar() {
   return (
-    <GridToolbarContainer>
+    <GridToolbarContainer sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Button onClick={() => window.location.reload()}>
+        <CachedIcon />
+        Actualiser
+      </Button>
       <GridToolbarExport />
     </GridToolbarContainer>
   );
@@ -20,7 +25,7 @@ export default function Masterclass() {
 
   useEffect(() => {
     axios
-      .get('http://localhost:5000/api/masterclass')
+      .get('http://localhost:5001/api/masterclass')
       .then((res) => {
         setMasterclass(res.data);
       })
@@ -42,7 +47,7 @@ export default function Masterclass() {
             Masterclass
           </Typography>
 
-          <div style={{ height: 300, width: '100%' }}>
+          <div style={{ height: '90vh', width: '100%' }}>
             <DataGrid
               rows={masterclass}
               loading={!masterclass}
@@ -53,12 +58,19 @@ export default function Masterclass() {
               checkboxSelection={checkboxSelection}
               experimentalFeatures={{ newEditingApi: true }}
               columns={[
-                { field: 'id', headerName: 'ID', editable: true },
-                { field: 'channel', headerName: 'Chaîne', editable: true },
-                { field: 'title', headerName: 'Titre', editable: true },
-                { field: 'playlistId', headerName: 'Playlist ID', editable: true },
-                { field: 'categoryId', headerName: 'Catégorie', editable: true, align: 'center' },
-                { field: 'isPremium', headerName: 'Premium', editable: true, align: 'center' },
+                { field: 'id', headerName: 'ID', editable: true, flex: 0.1 },
+                { field: 'channel', headerName: 'Chaîne', editable: true, flex: 0.3 },
+                { field: 'title', headerName: 'Titre', editable: true, flex: 0.4 },
+                { field: 'playlistId', headerName: 'Playlist ID', editable: true, flex: 0.5 },
+                { field: 'categoryId', headerName: 'Catégorie', editable: true, align: 'center', flex: 0.16 },
+                {
+                  type: 'boolean',
+                  field: 'isPremium',
+                  headerName: 'Premium',
+                  editable: true,
+                  align: 'center',
+                  flex: 0.16,
+                },
               ]}
             />
           </div>

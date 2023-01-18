@@ -26,6 +26,7 @@
     "babel": "^6.23.0",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "formik": "^2.2.9",
     "framer-motion": "^7.10.3",
     "husky": "^8.0.2",
     "lodash": "^4.17.21",
@@ -39,10 +40,12 @@
     "react-dom": "18.2.0",
     "react-fast-marquee": "^1.3.5",
     "react-modal": "^3.16.1",
+    "react-router-dom": "^6.6.2",
     "recharts": "^2.2.0",
     "sequelize": "^6.28.0",
     "stripe": "^11.4.0",
-    "typed.js": "^2.0.12"
+    "typed.js": "^2.0.12",
+    "yup": "^0.32.11"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
