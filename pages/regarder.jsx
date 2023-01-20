@@ -9,6 +9,7 @@ import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import DotsLeftMarquee from '../components/dotsLeftMarquee';
 import DotsRightMarquee from '../components/dotsRightMarquee';
+import AvatarMenu from '../components/AvatarMenu';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
@@ -31,6 +32,7 @@ export async function getServerSideProps() {
 const Regarder = ({ data }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
+
   const [video, setVideo] = useState('');
 
   useEffect(() => {
@@ -72,20 +74,7 @@ const Regarder = ({ data }) => {
                 </Typography>
               </Link>
 
-              <motion.div
-                whileHover={{
-                  scale: 1.03,
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-              >
-                <Button sx={{ top: '4px', borderRadius: '50%' }}>
-                  <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
-                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
-                  </Paper>
-                </Button>
-              </motion.div>
+              <AvatarMenu />
             </Box>
           </Box>
         </Box>

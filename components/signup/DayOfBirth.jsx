@@ -12,7 +12,7 @@ import { Box } from '@mui/material';
 export default function DayOfBirth({ values, setValues, errors }) {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-      <Stack spacing={3}>
+      <Stack>
         <Box sx={{ display: { xs: 'block', sm: 'none' }, marginTop: '1rem' }}>
           <MobileDatePicker
             required
