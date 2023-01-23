@@ -313,7 +313,7 @@ const Signin = () => {
                     <Link
                       sx={{ display: 'flex', justifyContent: 'flex-end' }}
                       data="forgotten"
-                      href="#"
+                      href="/reset"
                       underline="hover"
                     >
                       <Typography variant="body2">Mot de passe oublié</Typography>
