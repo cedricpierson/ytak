@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
+import AvatarMenu from '../components/AvatarMenu';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
@@ -85,24 +86,7 @@ const Masterclass = ({ data }) => {
               </motion.div>
               <NavMarquee />
 
-              <motion.div
-                whileHover={{
-                  scale: 1.03,
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: 'secondary.main',
-                    margin: '0.2rem 0.2rem 0.2rem -0.3rem',
-                    borderRadius: '50%',
-                  }}
-                >
-                  <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
-                </Button>
-              </motion.div>
+              <AvatarMenu />
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
               MasterClass avec <span style={{ color: '#bd64bb' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>

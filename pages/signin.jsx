@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { useSession, signIn, signOut } from 'next-auth/react';
-import axios from 'axios';
+import AuthContext from '../context/AuthProvider';
+import axios from './api/axios';
+import jwt_decode from 'jwt-decode';
 import Box from '@mui/material/Box';
 import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
@@ -9,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import GoogleIcon from '@mui/icons-material/Google';
 // import GitHubIcon from '@mui/icons-material/GitHub';
 import {
+  Alert,
   Button,
   Checkbox,
   Container,
@@ -16,6 +20,7 @@ import {
   FormGroup,
   IconButton,
   Link,
+  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
@@ -26,25 +31,41 @@ import { Stack } from '@mui/system';
 import Paper from '@mui/material/Paper';
 import Image from 'next/image';
 
+const LOGIN_URL = '/auth/signin';
+
 const Signin = () => {
+  const { setAuth } = useContext(AuthContext);
+  const emailRef = useRef();
+  const errRef = useRef();
+  const router = useRouter();
+
   const { data: session } = useSession();
 
-  const [values, setValues] = useState({
-    email: '',
-    password: '',
-    rememberMe: false,
-    showPassword: false,
-  });
+  const [status, setStatus] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState('');
+  const [errMsg, setErrMsg] = useState('');
 
-  const handleChange = (prop) => (event) => {
-    setValues({ ...values, [prop]: event.target.value });
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    emailRef.current.focus();
+  }, []);
+
+  useEffect(() => {
+    setErrMsg('');
+  }, [email, password]);
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setStatus(false);
   };
 
   const handleClickShowPassword = () => {
-    setValues({
-      ...values,
-      showPassword: !values.showPassword,
-    });
+    setShowPassword(!showPassword);
   };
 
   const handleMouseDownPassword = (event) => {
@@ -56,6 +77,8 @@ const Signin = () => {
   };
   const handleSignOut = () => {
     signOut({ redirect: false });
+    localStorage.removeItem(isAdmin, accessToken);
+    document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   };
   function getTitleCase(str) {
     const titleCase = str
@@ -121,184 +144,222 @@ const Signin = () => {
     );
   }
 
-  const handleSignin = () => {
-    const userData = {
-      email: values.email,
-      password: values.password,
-    };
-    console.log(userData);
-    axios.post('http://localhost:5001/auth/signin', userData).then((response) => {
-      console.log(response.status);
-      console.log(response.data);
-      if (response.data.isAdmin && response.data.isAdmin === true) {
-        localStorage.setItem('isAdmin', true);
+  const handleSignin = async (e) => {
+    e.preventDefault();
+    if (email && password) {
+      try {
+        const response = await axios.post(LOGIN_URL, JSON.stringify({ email, password }), {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        });
+        console.log(JSON.stringify(response));
+        const accessToken = response?.data?.accessToken;
+        const isAdmin = response?.data?.isAdmin;
+        setAuth({ email, password, accessToken, isAdmin });
+        setEmail('');
+        setPassword('');
+        setSuccess(true);
+      } catch (err) {
+        if (!err.response) {
+          setErrMsg('Chargement');
+        } else if (err?.response.status === 400) {
+          setErrMsg("Il manque l'email ou le mot de passe");
+        } else if (err?.response.status === 401) {
+          setErrMsg('Accès refusé');
+        } else {
+          setErrMsg('La connexion a échoué');
+        }
+        // errRef.current.focus();
       }
-      if (response.data.isPremium && response.data.isPremium === true) {
-        localStorage.setItem('isPremium', true);
-      }
-      if (response.data.accessToken) {
-        localStorage.setItem('x-access-token', JSON.stringify(response.data.accessToken));
-      }
-    });
+      let approved = false;
+      const userData = {
+        email: email,
+        password: password,
+      };
+      axios.post(LOGIN_URL, userData).then((response) => {
+        console.log(response.status);
+        console.log(response.data);
+        const decodedToken = response.data.accessToken ? jwt_decode(response.data.accessToken) : undefined;
+        const isAdmin = decodedToken.isAdmin;
+        if (response.status === 200) {
+          router.push('/regarder');
+        }
+        if (isAdmin && isAdmin === true) {
+          localStorage.setItem('isAdmin', true);
+        }
+        if (response.data.accessToken) {
+          document.cookie = `name=${response.data.accessToken}`;
+          localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
+          approved = true;
+          setStatus(true);
+        }
+      });
+    }
   };
 
   return (
-    <Container>
-      <div className="bg" />
-      <div className="bg bg2" />
-      <div className="bg bg3" />
-      <div className="content">
-        <Stack
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <Paper elevation={3}>
-            <Box
-              sx={{
+    <>
+      {success && approved ? (
+        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
+          <Alert severity="success">Vous êtes connecté</Alert>
+        </Box>
+      ) : (
+        <Container>
+          <div className="bg" />
+          <div className="bg bg2" />
+          <div className="bg bg3" />
+          <div className="content">
+            <Stack
+              style={{
                 display: 'flex',
-                flexDirection: 'column',
-                padding: '5rem',
-                backgroundColor: 'primary.lighter',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100vh',
               }}
             >
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: '1rem',
-                }}
-              >
-                <Typography variant="h1" fontFamily="Expletus Sans" color="initial">
-                  YTAK
-                </Typography>
-                <Typography variant="h3" fontFamily="Expletus Sans" color="initial">
-                  Bienvenue à vous
-                </Typography>
-                <Box style={{ display: 'flex' }}>
-                  <Button
-                    elevation={3}
-                    data="signinGoogle"
-                    sx={{
-                      width: '4rem',
-                      height: '4rem',
-                      borderRadius: '50%',
-                      marginTop: '2rem',
-                      marginX: '0.5rem',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    variant="contained"
-                    onClick={handleOAuthSignIn('google')}
-                  >
-                    <GoogleIcon />
-                  </Button>
-                  {/* <Button
-                    elevation={3}
-                    data="signinGitHub"
-                    sx={{
-                      width: '4rem',
-                      height: '4rem',
-                      borderRadius: '50%',
-                      marginTop: '2rem',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                    variant="contained"
-                    onClick={handleOAuthSignIn('github')}
-                  >
-                    <GitHubIcon />
-                  </Button> */}
-                </Box>
-              </Box>
-              <FormControl variant="standard">
-                <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                  <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                  <TextField
-                    id="input-with-sx"
-                    data="email"
-                    label="Adresse mail"
-                    variant="standard"
-                    value={values.email}
-                    onChange={handleChange('email')}
-                  />
-                </Box>
-              </FormControl>
-
-              <FormControl sx={{ ml: 4 }} variant="standard">
-                <InputLabel htmlFor="standard-adornment-password">Mot de Passe</InputLabel>
-                <Input
-                  id="standard-adornment-password"
-                  data="password"
-                  type={values.showPassword ? 'text' : 'password'}
-                  value={values.password}
-                  onChange={handleChange('password')}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {values.showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-                <Link sx={{ display: 'flex', justifyContent: 'flex-end' }} data="forgotten" href="#" underline="hover">
-                  <Typography variant="body2">Mot de passe oublié</Typography>
-                </Link>
-
-                <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="Se souvenir de moi" data="remember" />
-                </FormGroup>
-                <Stack
+              <Paper elevation={3}>
+                <Box
                   sx={{
                     display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: '2rem',
+                    flexDirection: 'column',
+                    padding: '5rem',
+                    backgroundColor: 'primary.lighter',
                   }}
-                  spacing={2}
-                  direction="row"
                 >
-                  <Button
-                    type="submit"
-                    elevation={3}
-                    data="signin"
-                    sx={{ width: '6rem', height: '6rem', borderRadius: '50%' }}
-                    variant="contained"
-                    onClick={handleSignin}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginBottom: '1rem',
+                    }}
                   >
-                    Entrer
-                  </Button>
-                  <Link href="/signup">
-                    <Button
-                      variant="text"
-                      data="signup"
-                      sx={{
-                        width: '6rem',
-                        height: '6rem',
-                        borderRadius: '50%',
-                        color: 'secondary.main',
-                      }}
+                    <Typography variant="h1" fontFamily="Expletus Sans" color="initial">
+                      YTAK
+                    </Typography>
+                    <Typography variant="h3" fontFamily="Expletus Sans" color="initial">
+                      Bienvenue à vous
+                    </Typography>
+                    <Box style={{ display: 'flex' }}>
+                      <Button
+                        elevation={3}
+                        data="signinGoogle"
+                        sx={{
+                          width: '4rem',
+                          height: '4rem',
+                          borderRadius: '50%',
+                          marginTop: '2rem',
+                          marginX: '0.5rem',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
+                        variant="contained"
+                        onClick={handleOAuthSignIn('google')}
+                      >
+                        <GoogleIcon />
+                      </Button>
+                    </Box>
+                  </Box>
+                  {errMsg ? (
+                    <Snackbar
+                      open={status}
+                      autoHideDuration={6000}
+                      onClose={handleClose}
+                      anchorOrigin={{ horizontal: 'center', vertical: 'center' }}
                     >
-                      S'inscrire
-                    </Button>
-                  </Link>
-                </Stack>
-              </FormControl>
-            </Box>
-          </Paper>
-        </Stack>
-      </div>
-    </Container>
+                      <Alert severity="error" ref={errRef}>
+                        {errMsg}
+                      </Alert>
+                    </Snackbar>
+                  ) : undefined}
+
+                  <FormControl variant="standard">
+                    <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                      <AccountCircle sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
+                      <TextField
+                        id="input-with-sx"
+                        data="email"
+                        ref={emailRef}
+                        label="Adresse mail"
+                        variant="standard"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </Box>
+                  </FormControl>
+
+                  <FormControl sx={{ ml: 4 }} variant="standard">
+                    <InputLabel htmlFor="standard-adornment-password">Mot de Passe</InputLabel>
+                    <Input
+                      id="standard-adornment-password"
+                      data="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                    <Link
+                      sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                      data="forgotten"
+                      href="/reset"
+                      underline="hover"
+                    >
+                      <Typography variant="body2">Mot de passe oublié</Typography>
+                    </Link>
+                    <Stack
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        marginTop: '2rem',
+                      }}
+                      spacing={2}
+                      direction="row"
+                    >
+                      <Button
+                        type="submit"
+                        elevation={3}
+                        data="signin"
+                        sx={{ width: '6rem', height: '6rem', borderRadius: '50%' }}
+                        variant="contained"
+                        onClick={handleSignin}
+                      >
+                        Entrer
+                      </Button>
+                      <Link href="/signup">
+                        <Button
+                          variant="text"
+                          data="signup"
+                          sx={{
+                            width: '6rem',
+                            height: '6rem',
+                            borderRadius: '50%',
+                            color: 'secondary.main',
+                          }}
+                        >
+                          S'inscrire
+                        </Button>
+                      </Link>
+                    </Stack>
+                  </FormControl>
+                </Box>
+              </Paper>
+            </Stack>
+          </div>
+        </Container>
+      )}
+    </>
   );
 };
 

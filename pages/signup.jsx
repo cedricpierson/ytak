@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -59,6 +60,7 @@ const Signup = () => {
     showPassword: false,
     showPasswordVerify: false,
   });
+  const router = useRouter();
 
   const formik = useFormik({
     initialValues: {
@@ -119,12 +121,13 @@ const Signup = () => {
       isPremium: false,
       isAdmin: false,
     };
-    console.log(userData.isPremium);
 
-    axios.post('http://localhost:5001/auth/signup', userData).then((response) => {
-      console.log(response.status);
-      console.log(response.data);
-    });
+    axios
+      .post('http://localhost:5001/auth/signup', userData)
+      .then((response) => {
+        console.warn(response.status);
+      })
+      .then(router.push('signin'));
   };
 
   return (
@@ -183,9 +186,10 @@ const Signup = () => {
 
               <form>
                 {/* // Prénom + NOM */}
-                <Stack sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' } }}>
+                <Stack>
                   <TextField
                     required
+                    fullWidth
                     id="demo-helper-text-misaligned-no-helper-firstname"
                     name="firstname"
                     label="Prénom"
@@ -194,9 +198,11 @@ const Signup = () => {
                     error={formik.errors.firstname}
                     onBlur={formik.handleBlur}
                     onChange={formik.handleChange}
-                    sx={{ width: { xs: 'auto', sm: '20ch' }, marginTop: '0.5rem' }}
+                    sx={{ marginTop: '0.5rem' }}
                     helperText={formik.errors.firstname}
                   />
+                </Stack>
+                <Stack>
                   <TextField
                     required
                     type="text"
@@ -206,14 +212,13 @@ const Signup = () => {
                     value={formik.values.lastname}
                     id="demo-helper-text-misaligned-no-helper-lastname"
                     label="NOM"
-                    sx={{ width: { xs: 'auto', sm: '30ch' }, marginTop: '0.5rem' }}
+                    sx={{ marginTop: '0.5rem' }}
                     error={formik.errors.lastname}
                     helperText={formik.errors.lastname}
                   />
                 </Stack>
 
                 {/* Day of birth */}
-
                 <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
                   <Stack spacing={3}>
                     <Box sx={{ display: { xs: 'block', sm: 'none' }, marginTop: '1rem' }}>
@@ -293,7 +298,6 @@ const Signup = () => {
                       id="standard-adornment-password"
                       type={values.showPassword ? 'text' : 'password'}
                       required
-                      fullWidth
                       label="Mot de Passe"
                       autoComplete="on"
                       data="password"
@@ -330,7 +334,7 @@ const Signup = () => {
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange('changepassword')}
                       value={formik.values.changepassword}
-                      label="Confirmer votre mot de Passe"
+                      label="Confirmer mot de Passe"
                       autoComplete="on"
                       error={formik.errors.changepassword}
                       helperText={formik.errors.changepassword}

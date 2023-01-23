@@ -31,7 +31,7 @@ export default function Users() {
     };
     console.log(adminData);
     axios
-      .get('http://localhost:5001/api/users', adminData)
+      .get('http://localhost:5001/api/users')
       .then((res) => {
         setUsers(res.data);
       })
@@ -39,9 +39,9 @@ export default function Users() {
   }, []);
   const title = 'Utilisateurs';
 
-  function getCar(params) {
-    return `${params.cars.model}`;
-  }
+  // function getCar(params) {
+  //   return `${params.cars.model}`;
+  // }
 
   return (
     <>
