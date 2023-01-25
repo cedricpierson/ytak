@@ -88,8 +88,8 @@ const Masterclass = ({ data }) => {
 
               <AvatarMenu />
             </Box>
-            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
-              MasterClass avec <span style={{ color: '#bd64bb' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>
+            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
+              DIGITAL
             </Typography>
           </Box>
           <Grid
