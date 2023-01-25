@@ -3,7 +3,7 @@ import { Box, Button, Container, FormControl, InputLabel, Link, Stack, TextField
 import Typing from '../components/Typing';
 import { motion } from 'framer-motion';
 import Marquee from 'react-fast-marquee';
-import Account from '../components/account';
+import Account from '../components/Account';
 
 const index = () => {
   const marqueeVariants = {
