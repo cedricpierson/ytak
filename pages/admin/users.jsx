@@ -42,6 +42,11 @@ export default function Users() {
   const mutateRow = useFakeMutation();
   const [snackbar, setSnackbar] = useState(null);
 
+  const handleAddNewUser = () => {
+    setUsers([...users, newUser, values]);
+    setNewUser({});
+  };
+
   const handleCloseSnackbar = () => setSnackbar(null);
 
   useEffect(() => {
@@ -72,7 +77,7 @@ export default function Users() {
         isAdmin: newRow.isAdmin,
         imageUrl: newRow.imageUrl,
       };
-      console.log(dataToUpdate);
+
       axios
         .put(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/users/${newRow.id}`, dataToUpdate)
         .then((res) => {
@@ -82,7 +87,6 @@ export default function Users() {
             }
             return u;
           });
-          // setUsers(updatedUsers);
           setSnackbar({ children: 'Utilisateur modifié avec succès!', severity: 'success' });
         })
         .catch((error) => {
@@ -114,7 +118,7 @@ export default function Users() {
           </Typography>
 
           <div style={{ height: '90vh', width: '100%' }}>
-            <AddUser />
+            <AddUser newUser={newUser} setNewUser={setNewUser} handleAddNewUser={handleAddNewUser} />
             <DataGrid
               rows={users}
               loading={!users}
