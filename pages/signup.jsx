@@ -123,7 +123,7 @@ const Signup = () => {
     };
 
     axios
-      .post('http://localhost:5001/auth/signup', userData)
+      .post(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/auth/signup`, userData)
       .then((response) => {
         console.warn(response.status);
       })

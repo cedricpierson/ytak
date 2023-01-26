@@ -5,19 +5,26 @@ import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import DotsLeftMarquee from '../components/dotsLeftMarquee';
 import DotsRightMarquee from '../components/dotsRightMarquee';
 import AvatarMenu from '../components/AvatarMenu';
-
-const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
+import axios from 'axios';
+import VideoLine from '../components/regarder/VideoLine';
 
 const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
+  axios.get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`).then((response) => {
+    const data = response.data;
+    const digital = data.filter((item) => item.categoryId === 1);
+    const travailInde = data.filter((item) => item.categoryId === 2);
+    const nature = data.filter((item) => item.categoryId === 3);
+    return { digital, travailInde, nature };
+  });
+
   const res = await fetch(
-    `${YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=12&key=${process.env.YOUTUBE_API_KEY}`
+    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
   );
 
   const data = await res.json();
@@ -29,7 +36,7 @@ export async function getServerSideProps() {
   };
 }
 
-const Regarder = ({ data }) => {
+const Regarder = ({ data, digital, travailInde, nature }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
 
@@ -98,74 +105,14 @@ const Regarder = ({ data }) => {
           }}
         >
           <Typography variant="h4" color="grey.800">
-            Sélection
+            Les + vues
           </Typography>
           {/* <DotsRightMarquee /> */}
         </Box>
-        <Grid
-          container
-          rowSpacing={1}
-          columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          sx={{
-            justifyContent: 'center',
-            alignItems: 'center',
-            flexDirection: 'row',
-            borderRadius: '5px',
-          }}
-        >
-          {!open &&
-            data.items.map((item) => {
-              const { id, snippet = {}, contentDetails = {} } = item;
-              const { videoId } = contentDetails;
-              const { title, thumbnails = {} } = snippet;
-              const { medium = {} } = thumbnails;
-              return (
-                <motion.div
-                  whileHover={{
-                    scale: 1.2,
-                    zIndex: '1',
-                    transition: {
-                      default: { ease: 'linear' },
-                    },
-                  }}
-                  whileTap={{ scale: 0.8 }}
-                >
-                  <Button
-                    key={item.id}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setOpen(true);
-                      setVideo(item.contentDetails.videoId);
-                    }}
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flexDirection: 'row',
-                      padding: '1rem',
-                      backgroundColor: 'grey.400',
-                      borderRadius: '5px',
-                      margin: '0.2rem',
-                    }}
-                  >
-                    {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
-                  </Button>
-                </motion.div>
-              );
-            })}
-          {open && (
-            <iframe
-              ref={videoRef}
-              width="560"
-              height="315"
-              src={`https://www.youtube.com/embed/${video}`}
-              title="Player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            />
-          )}
-        </Grid>
+        <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
         {/* <DotsLeftMarquee /> */}
       </div>
     </Stack>

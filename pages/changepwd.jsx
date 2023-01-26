@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -57,11 +57,15 @@ const Changepwd = () => {
   });
   const router = useRouter();
 
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const resetTokenUrl = searchParams.get('resetToken');
+  }, []);
+
   const formik = useFormik({
     initialValues: {
       email: '',
       password: '',
-      reset_token: '',
       changepassword: '',
     },
     validationSchema: SignupSchema,
@@ -69,7 +73,6 @@ const Changepwd = () => {
       alert(JSON.stringify(values, null, 2));
     },
   });
-
   const [open, setOpen] = useState(false);
 
   const handleClose = (event, reason) => {
@@ -106,7 +109,6 @@ const Changepwd = () => {
     const userData = {
       email: formik.values.email,
       password: formik.values.password,
-      reset_token: '',
     };
 
     axios
@@ -172,8 +174,38 @@ const Changepwd = () => {
               </Box>
 
               <form>
+                <FormControl variant="standard" required>
+                  <Box sx={{ display: 'flex', alignItems: 'flex-end', marginTop: '1rem' }}>
+                    <TextField
+                      required
+                      fullWidth
+                      id="input-with-sx"
+                      data="username"
+                      label="Adresse mail"
+                      value={formik.values.email}
+                      onBlur={formik.handleBlur}
+                      onChange={formik.handleChange}
+                      type="email"
+                      name="email"
+                      error={formik.errors.email}
+                      helperText={formik.errors.email}
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="end">
+                            <AccountCircle
+                              sx={{ color: 'action.active', mr: 1, my: 0.5 }}
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                            />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  </Box>
+                </FormControl>
                 {/* Password */}
-                <FormControl variant="standard" sx={{ marginTop: '1rem' }}>
+                <FormControl variant="standard">
                   <TextField
                     id="standard-adornment-password"
                     type={values.showPassword ? 'text' : 'password'}
