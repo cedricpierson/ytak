@@ -10,12 +10,13 @@ import Backdrop from '@mui/material/Backdrop';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import DeleteIcon from '@mui/icons-material/Delete';
 import ClickAwayListener from '@mui/base/ClickAwayListener';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import axios from 'axios';
 
-const AddUser = ({ selectionModel, deleteRow }) => {
-  const [newUser, setNewUser] = useState({});
+const AddMasterclass = ({ selectionModel, deleteRow }) => {
+  const [newMasterclass, setNewMasterclass] = useState({});
   const [status, setStatus] = useState(false);
   const [openNew, setOpenNew] = useState(false);
   const [snackbar, setSnackbar] = useState(null);
@@ -26,23 +27,20 @@ const AddUser = ({ selectionModel, deleteRow }) => {
 
   const handleCheckedPremium = (event) => {
     setCheckedPremium(!checkedPremium);
-    setNewUser({ ...newUser, isPremium: !checkedPremium });
+    setNewMasterclass({ ...newMasterclass, isPremium: !checkedPremium });
   };
-  const handleCheckedAdmin = (event) => {
-    setCheckedAdmin(!checkedAdmin);
-    setNewUser({ ...newUser, isAdmin: !checkedAdmin });
-  };
+
   const handleClickAway = () => {
     setOpenNew(false);
   };
-  console.log(newUser);
+  console.log(newMasterclass);
 
-  const handleAddNewUser = () => {
+  const handleAddNewMasterclass = () => {
     axios
-      .post(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/users`, newUser)
+      .post(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`, newMasterclass)
       .then((res) => {
         if (res.status === 201) {
-          setSnackbar({ children: 'Utilisateur enregistré avec succès!', severity: 'success' });
+          setSnackbar({ children: 'Masterclass enregistré avec succès!', severity: 'success' });
           setStatus(true);
           const reload = () => window.location.reload();
           reload();
@@ -88,28 +86,29 @@ const AddUser = ({ selectionModel, deleteRow }) => {
                   }}
                 >
                   <Typography variant="h4" color="initial">
-                    Nouvel utilisateur
+                    Nouvelle Masterclass
                   </Typography>
                   <TextField
-                    label="Prénom"
-                    value={newUser.firstname}
-                    onChange={(event) => setNewUser({ ...newUser, firstname: event.target.value })}
+                    label="Chaîne"
+                    value={newMasterclass.channel}
+                    onChange={(event) => setNewMasterclass({ ...newMasterclass, channel: event.target.value })}
                   />
                   <TextField
-                    label="NOM"
-                    value={newUser.lastname}
-                    onChange={(event) => setNewUser({ ...newUser, lastname: event.target.value })}
+                    label="Titre"
+                    value={newMasterclass.title}
+                    onChange={(event) => setNewMasterclass({ ...newMasterclass, title: event.target.value })}
                   />
                   <TextField
-                    label="Email"
-                    value={newUser.email}
-                    onChange={(event) => setNewUser({ ...newUser, email: event.target.value })}
+                    label="Playlist ID"
+                    value={newMasterclass.playlistId}
+                    onChange={(event) => setNewMasterclass({ ...newMasterclass, playlistId: event.target.value })}
                   />
                   <TextField
-                    label="Mot de Passe"
-                    value={newUser.password}
-                    onChange={(event) => setNewUser({ ...newUser, password: event.target.value })}
+                    label="Catégorie ID"
+                    value={newMasterclass.categoryId}
+                    onChange={(event) => setNewMasterclass({ ...newMasterclass, categoryId: event.target.value })}
                   />
+
                   <FormGroup>
                     <FormControlLabel
                       control={
@@ -120,28 +119,13 @@ const AddUser = ({ selectionModel, deleteRow }) => {
                         />
                       }
                       label="Premium"
-                      value={newUser.isPremium}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={checkedAdmin}
-                          onChange={handleCheckedAdmin}
-                          inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                      }
-                      label="Admin"
-                      value={newUser.isAdmin}
+                      value={newMasterclass.isPremium}
                     />
                   </FormGroup>
-                  <TextField
-                    label="Image: Nom du fichier"
-                    value={newUser.image}
-                    onChange={(event) => setNewUser({ ...newUser, image: event.target.value })}
-                  />
+
                   <Button
                     variant="text"
-                    onClick={handleAddNewUser}
+                    onClick={handleAddNewMasterclass}
                     sx={{
                       width: '4rem',
                       height: '4rem',
@@ -180,4 +164,4 @@ const AddUser = ({ selectionModel, deleteRow }) => {
   );
 };
 
-export default AddUser;
+export default AddMasterclass;

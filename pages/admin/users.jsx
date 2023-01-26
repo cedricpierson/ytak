@@ -38,9 +38,9 @@ const useFakeMutation = () => {
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [checkboxSelection, setCheckboxSelection] = useState(true);
   const mutateRow = useFakeMutation();
   const [snackbar, setSnackbar] = useState(null);
+  const [selectionModel, setSelectionModel] = useState([]);
 
   const handleAddNewUser = () => {
     setUsers([...users, newUser, values]);
@@ -88,6 +88,8 @@ export default function Users() {
             return u;
           });
           setSnackbar({ children: 'Utilisateur modifié avec succès!', severity: 'success' });
+          const reload = () => window.location.reload();
+          reload();
         })
         .catch((error) => {
           setSnackbar({ children: error.message, severity: 'error' });
@@ -102,8 +104,29 @@ export default function Users() {
     setSnackbar({ children: error.message, severity: 'error' });
   }, []);
 
+  const deleteRow = () => {
+    selectionModel.map((row) => {
+      axios
+        .delete(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/users/${row}`)
+        .then((res) => {
+          const updatedUsers = users.map((u) => {
+            if (u.id === row) {
+              return res.data;
+            }
+            return u;
+          });
+          setSnackbar({ children: 'Utilisateur supprimé!', severity: 'success' });
+          const reload = () => window.location.reload();
+          reload();
+        })
+        .catch((error) => {
+          setSnackbar({ children: error.message, severity: 'error' });
+        });
+    });
+  };
+
   const title = 'Utilisateurs';
-  console.log(users);
+  console.log(selectionModel);
   return (
     <>
       <Head>
@@ -118,7 +141,7 @@ export default function Users() {
           </Typography>
 
           <div style={{ height: '90vh', width: '100%' }}>
-            <AddUser newUser={newUser} setNewUser={setNewUser} handleAddNewUser={handleAddNewUser} />
+            <AddUser selectionModel={selectionModel} deleteRow={deleteRow} />
             <DataGrid
               rows={users}
               loading={!users}
@@ -126,9 +149,13 @@ export default function Users() {
                 Toolbar: CustomToolbar,
               }}
               editMode="row"
-              checkboxSelection={checkboxSelection}
+              checkboxSelection
               processRowUpdate={(newRow) => processRowUpdate(newRow)}
               onProcessRowUpdateError={handleProcessRowUpdateError}
+              onSelectionModelChange={(newSelectionModel) => {
+                setSelectionModel(newSelectionModel);
+              }}
+              selectionModel={selectionModel}
               experimentalFeatures={{ newEditingApi: true }}
               columns={[
                 { field: 'id', headerName: 'ID', editable: false, flex: 0.1 },

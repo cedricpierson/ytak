@@ -15,4 +15,4 @@ const Dashboard = () => {
   );
 };
 
-export default Admin;
+export default Dashboard;
