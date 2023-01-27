@@ -7,8 +7,8 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Vues() {
-  const [users, setUsers] = useState([]);
+export default function NbMasterclass() {
+  const [masterclass, setmasterclass] = useState([]);
 
   useEffect(() => {
     const adminData = {
@@ -17,9 +17,9 @@ export default function Vues() {
     };
     const getData = async () => {
       await axios
-        .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/users`)
+        .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
         .then((res) => {
-          setUsers(res.data);
+          setmasterclass(res.data);
         })
         .catch((error) => console.error(error));
     };
@@ -28,10 +28,10 @@ export default function Vues() {
   return (
     <>
       <Typography component="p" variant="h4">
-        <span style={{ color: '#d6a5d4' }}>{users.length}</span> utilisateurs
+        <span style={{ color: '#d6a5d4' }}>{masterclass.length}</span> Masterclass
       </Typography>
       <Typography color="text.secondary" sx={{ flex: 1 }}>
-        Inscrits
+        En ligne
       </Typography>
     </>
   );

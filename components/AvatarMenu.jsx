@@ -26,7 +26,7 @@ export default function AvatarMenu() {
     window.localStorage.removeItem('isAdmin');
     router.push('/signin');
   };
-  const handleProfile = () => router.push('/profile');
+  const handleProfile = () => router.push('/profil');
 
   return (
     <Box sx={{ height: 330, transform: 'translateZ(0px)', flexGrow: 1 }}>
