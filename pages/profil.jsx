@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Avatar, Box, Button, Container, FormControl, IconButton, Paper, TextField, Typography } from '@mui/material';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { Stack } from '@mui/system';
 import 'dayjs/locale/fr';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -34,7 +35,12 @@ const ProfilChange = Yup.object({
 });
 
 const Profil = () => {
+  const inputRef = useRef();
+  const [errors, setErrors] = useState();
+  const [avatar, setAvatar] = useState();
+  const [msg, setMsg] = useState();
   const [decoded, setDecoded] = useState();
+  const [image, setImage] = useState(false);
   const [birthday, setBirthday] = useState(dayjs());
   const [values, setValues] = useState({
     currentUser: {},
@@ -53,7 +59,7 @@ const Profil = () => {
       setValues({ ...values, currentUser: response.data });
       console.log(response);
     });
-  }, []);
+  }, [image]);
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -62,6 +68,7 @@ const Profil = () => {
       lastname: values.currentUser.lastname,
       birthday: values.currentUser.dayOfBirth ? format(new Date(values.currentUser.dayOfBirth), 'yyyy-MM-dd') : '',
       email: values.currentUser.email,
+      imageUrl: values.currentUser.imageUrl,
     },
     validationSchema: ProfilChange,
     onSubmit: (values) => {
@@ -77,16 +84,37 @@ const Profil = () => {
       dayOfBirth: dayjs(formik.values.birthday).format('YYYY-MM-DD'),
       email: formik.values.email,
     };
-
+    console.log(userData);
     const token = localStorage.getItem('accessToken');
     const decoded = jwt_decode(token);
     axios
       .put(`http://localhost:5001/api/users/${decoded.id}`, userData)
       .then((response) => {
+        setMsg('Les informations ont été mise à jour');
         console.warn(response.status);
       })
       .then(router.push('profil'));
   };
+
+  const hOnChange = (evt) => {
+    evt.preventDefault();
+    if (inputRef.current.files[0].size >= 1000000) {
+      setErrors('Le fichier est trop volumineux !');
+      console.log(size);
+    } else {
+      setAvatar('Avatar mis à jour');
+      const formData = new FormData();
+      formData.append('avatar', inputRef.current.files[0]);
+      const token = localStorage.getItem('accessToken');
+      const decoded = jwt_decode(token);
+
+      axios.post(`http://localhost:5001/api/users/avatar/${decoded.id}`, formData).then(() => {
+        setImage(true);
+      });
+    }
+  };
+
+  console.log(values.currentUser.imageUrl);
 
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
@@ -126,24 +154,39 @@ const Profil = () => {
                 </Typography>
               </Box>
 
-              <form>
+              <form encType="multipart/form-data">
                 {/* AVATAR */}
                 <Stack>
-                  <IconButton color="primary" aria-label="upload picture" component="label" justifyContent="center">
-                    <input hidden accept="image/*" type="file" />
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="label"
+                    justifyContent="center"
+                    onChange={hOnChange}
+                  >
+                    <input hidden accept="image/*" type="file" name="avatar" ref={inputRef} />
+
                     <Avatar
-                      alt="image_avatar"
-                      src=""
+                      alt="avatar"
+                      src={`http://localhost:5001/${values?.currentUser?.imageUrl}`}
                       sx={{
                         width: '6rem',
                         height: '6rem',
                         borderRadius: '50%',
                         marginTop: '1.5rem',
                       }}
-                    />
+                    >
+                      <PhotoCamera />
+                    </Avatar>
                   </IconButton>
                 </Stack>
+              </form>
+              <Typography>
+                {errors}
+                {avatar}
+              </Typography>
 
+              <form>
                 {/* Prénom + NOM */}
                 <Stack>
                   <TextField
@@ -271,6 +314,7 @@ const Profil = () => {
                   >
                     Enregistrer
                   </Button>
+                  {msg}
                 </Stack>
               </form>
             </Box>
