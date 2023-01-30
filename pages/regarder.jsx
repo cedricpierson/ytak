@@ -24,7 +24,7 @@ export async function getServerSideProps() {
   });
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
   );
 
   const data = await res.json();
@@ -55,7 +55,6 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-
   return (
     <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div class="bg" />
@@ -96,6 +95,7 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
             <NavMarquee />
           </Box>
         </Box>
+
         <Box
           sx={{
             display: 'flex',
@@ -107,11 +107,49 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
           <Typography variant="h4" color="grey.800">
             Les + vues
           </Typography>
-          {/* <DotsRightMarquee /> */}
         </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsLeftMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Digital
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsRightMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Travail Indépendant
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsLeftMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Nature
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
         {/* <DotsLeftMarquee /> */}
       </div>
