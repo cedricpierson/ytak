@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper';
 import Home from '@mui/icons-material/Home';
 import People from '@mui/icons-material/People';
 import GridViewIcon from '@mui/icons-material/GridView';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+
 import VideoSettingsIcon from '@mui/icons-material/VideoSettings';
 
 import Link from 'next/link';
@@ -48,7 +50,7 @@ const SideNav = () => {
           </ListItemIcon>
           <ListItemText
             sx={{ my: 0, px: 0 }}
-            primary="Cédric"
+            primary="Admin"
             primaryTypographyProps={{
               fontSize: 20,
               fontWeight: 'medium',
@@ -100,6 +102,21 @@ const SideNav = () => {
               </Link>
             ))}
         </Box>
+        <ListItem component="div" disablePadding>
+          <ListItemButton sx={{ height: 56 }} component="a" href="/regarder">
+            <ListItemIcon>
+              <SubdirectoryArrowRightIcon color="primary" />
+            </ListItemIcon>
+            <ListItemText
+              primary="Sortie"
+              primaryTypographyProps={{
+                color: 'primary',
+                fontWeight: 'medium',
+                variant: 'body2',
+              }}
+            />
+          </ListItemButton>
+        </ListItem>
       </Paper>
     </Box>
   );

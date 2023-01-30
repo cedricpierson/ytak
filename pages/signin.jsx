@@ -182,7 +182,7 @@ const Signin = () => {
         const decodedToken = response.data.accessToken ? jwt_decode(response.data.accessToken) : undefined;
         const isAdmin = decodedToken.isAdmin;
         if (response.status === 200) {
-          router.push('/profil');
+          router.push('/regarder');
         }
         if (isAdmin && isAdmin === true) {
           localStorage.setItem('isAdmin', true);

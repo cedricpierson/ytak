@@ -15,13 +15,13 @@ import VideoLine from '../components/regarder/VideoLine';
 const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
-  axios.get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`).then((response) => {
-    const data = response.data;
-    const digital = data.filter((item) => item.categoryId === 1);
-    const travailInde = data.filter((item) => item.categoryId === 2);
-    const nature = data.filter((item) => item.categoryId === 3);
-    return { digital, travailInde, nature };
-  });
+  // axios.get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`).then((response) => {
+  //   const data = response.data;
+  //   const digital = data.filter((item) => item.categoryId === 1);
+  //   const travailInde = data.filter((item) => item.categoryId === 2);
+  //   const nature = data.filter((item) => item.categoryId === 3);
+  //   return { digital, travailInde, nature };
+  // });
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
@@ -41,7 +41,6 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
   const [open, setOpen] = useState(false);
 
   const [video, setVideo] = useState('');
-
   useEffect(() => {
     const handler = (e) => {
       if (open && videoRef.current && !videoRef.current.contains(e.target)) {
