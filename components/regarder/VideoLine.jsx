@@ -15,7 +15,6 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo }) => {
           alignItems: 'center',
           flexDirection: 'row',
           borderRadius: '5px',
-          overflowX: 'hidden',
         }}
       >
         {!open &&
