@@ -15,16 +15,16 @@ import VideoLine from '../components/regarder/VideoLine';
 const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
-  axios.get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`).then((response) => {
-    const data = response.data;
-    const digital = data.filter((item) => item.categoryId === 1);
-    const travailInde = data.filter((item) => item.categoryId === 2);
-    const nature = data.filter((item) => item.categoryId === 3);
-    return { digital, travailInde, nature };
-  });
+  // axios.get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`).then((response) => {
+  //   const data = response.data;
+  //   const digital = data.filter((item) => item.categoryId === 1);
+  //   const travailInde = data.filter((item) => item.categoryId === 2);
+  //   const nature = data.filter((item) => item.categoryId === 3);
+  //   return { digital, travailInde, nature };
+  // });
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
   );
 
   const data = await res.json();
@@ -41,7 +41,6 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
   const [open, setOpen] = useState(false);
 
   const [video, setVideo] = useState('');
-
   useEffect(() => {
     const handler = (e) => {
       if (open && videoRef.current && !videoRef.current.contains(e.target)) {
@@ -55,7 +54,6 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-
   return (
     <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div class="bg" />
@@ -96,6 +94,7 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
             <NavMarquee />
           </Box>
         </Box>
+
         <Box
           sx={{
             display: 'flex',
@@ -107,11 +106,49 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
           <Typography variant="h4" color="grey.800">
             Les + vues
           </Typography>
-          {/* <DotsRightMarquee /> */}
         </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsLeftMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Digital
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsRightMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Travail Indépendant
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
+        <DotsLeftMarquee />
+        <Box
+          sx={{
+            display: 'flex',
+            // justifyContent: 'center',
+            alignItems: 'center',
+            margin: '0.5rem 2rem',
+          }}
+        >
+          <Typography variant="h4" color="grey.800">
+            Nature
+          </Typography>
+        </Box>
         <VideoLine data={data} videoRef={videoRef} open={open} setOpen={setOpen} video={video} setVideo={setVideo} />
         {/* <DotsLeftMarquee /> */}
       </div>

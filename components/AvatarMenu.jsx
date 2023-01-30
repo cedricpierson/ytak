@@ -20,6 +20,7 @@ export default function AvatarMenu() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const avatar = '/images/yavuz.jpg'; /*`http://localhost:5001/${values?.currentUser?.imageUrl}`*/
   const router = useRouter();
   const signout = () => {
     window.localStorage.removeItem('accessToken');
@@ -43,7 +44,7 @@ export default function AvatarMenu() {
               },
             }}
           >
-            <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
+            <Avatar alt="Avatar" src={avatar} sx={{ width: 72, height: 72, borderRadius: '50%' }} />
           </motion.div>
         }
         onClose={handleClose}
