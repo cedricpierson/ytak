@@ -12,7 +12,7 @@ An OTT - Streaming platform about Digital, Independant work and nature.
 
 ## Demo
 
-Insert gif or link to demo
+Link to demo
 
 ## Tech Stack
 
