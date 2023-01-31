@@ -14,8 +14,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 | Color           | Hex                                                              |
 | --------------- | ---------------------------------------------------------------- |
-| Primary Color   | ![#a5d6a7](https://via.placeholder.com/10/0a192f?text=+) #a5d6a7 |
-| Secondary Color | ![#d6a5d4](https://via.placeholder.com/10/f8f8f8?text=+) #d6a5d4 |
+| Primary Color   | ![#A5D6A7](https://via.placeholder.com/10/0a192f?text=+) #a5d6a7 |
+| Secondary Color | ![#D6A5D4](https://via.placeholder.com/10/f8f8f8?text=+) #d6a5d4 |
 | Grey 800        | ![#212B36](https://via.placeholder.com/10/00b48a?text=+) #212B36 |
 
 ## Authors
