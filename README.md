@@ -82,7 +82,6 @@ Link to demo
 
 ## 🔗 Links
 
-[![portfolio](https://portfolio-nextjs-git-dev-cedricpierson.vercel.app/)(https://katherineoelsner.com/)
-[![linkedin](https://www.linkedin.com/in/cedricpierson01/)(https://www.linkedin.com/)
-[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/)
-[![linkedin](https://www.linkedin.com/in/didier-guy/)(https://www.linkedin.com/)
+[![portfolio](https://portfolio-nextjs-git-dev-cedricpierson.vercel.app/)
+[![linkedin]([https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white](https://www.linkedin.com/in/cedricpierson01/))](https://www.linkedin.com/)
+
