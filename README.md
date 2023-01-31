@@ -1,4 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# YTAK Masterclasses
+
+An OTT - Streaming platform about Digital, Independant work and nature.
+
+## Badges
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+
+## Demo
+
+Link to demo
+
+## Tech Stack
+
+**Client:** React, Next, MUI, Formik, Yup
+
+**Server:** Node, Express, Sequelize
+
+## API Reference
+
+#### Get all users
+
+```http
+  GET /api/users
+```
+
+#### Get user by id
+
+```http
+  GET /api/users/:id
+```
+
+#### Get all masterclasses
+
+```http
+  GET /api/masterclass
+```
+
+#### Get c by id
+
+```http
+  GET /api/masterclass/:id
+```
+
+#### Get masterclass by category
+
+```http
+  GET /api/masterclass/:categoryId
+```
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -14,9 +66,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 | Color           | Hex                                                              |
 | --------------- | ---------------------------------------------------------------- |
-| Primary Color   | ![#a5d6a7](https://via.placeholder.com/10/0a192f?text=+) #a5d6a7 |
-| Secondary Color | ![#d6a5d4](https://via.placeholder.com/10/f8f8f8?text=+) #d6a5d4 |
-| Grey 800        | ![#212B36](https://via.placeholder.com/10/00b48a?text=+) #212B36 |
+| Primary Color   | ![#a5d6a7](https://via.placeholder.com/10/a5d6a7?text=+) #a5d6a7 |
+| Secondary Color | ![#d6a5d4](https://via.placeholder.com/10/d6a5d4?text=+) #d6a5d4 |
+| Grey 800        | ![#212B36](https://via.placeholder.com/10/212B36?text=+) #212B36 |
 
 ## Authors
 
