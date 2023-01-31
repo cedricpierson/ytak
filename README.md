@@ -1,4 +1,4 @@
-# YTAK
+# YTAK MasterClasses
 
 An OTT - Streaming platform about Digital, Independant work and nature.
 
