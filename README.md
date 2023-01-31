@@ -8,7 +8,7 @@ An OTT - Streaming platform about Digital, Independant work and nature.
 
 ## Screenshots
 
-![App Screenshot](/images/Ytak-MasterClasses.jpg)
+![App Screenshot](./public/images/Ytak-MasterClasses.jpg)
 
 ## Demo
 
