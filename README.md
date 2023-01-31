@@ -1,4 +1,4 @@
-# Ytak
+# YTAK
 
 An OTT - Streaming platform about Digital, Independant work and nature.
 
