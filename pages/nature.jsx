@@ -85,8 +85,24 @@ const Nature = ({ data }) => {
                 </Link>
               </motion.div>
               <NavMarquee />
-
-              <AvatarMenu />
+              <motion.div
+                whileHover={{
+                  scale: 1.03,
+                  transition: {
+                    default: { ease: 'linear' },
+                  },
+                }}
+              >
+                <Button
+                  sx={{
+                    backgroundColor: 'secondary.main',
+                    margin: '0.2rem 0.2rem 0.2rem -0.3rem',
+                    borderRadius: '50%',
+                  }}
+                >
+                  <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
+                </Button>
+              </motion.div>
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
               MasterClass avec <span style={{ color: '#519657' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>

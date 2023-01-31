@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
+import AvatarMenu from '../components/AvatarMenu';
 
 const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
 
@@ -25,7 +26,7 @@ export async function getServerSideProps() {
   };
 }
 
-const Masterclass = ({ data }) => {
+const TravailInde = ({ data }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -104,7 +105,7 @@ const Masterclass = ({ data }) => {
               </motion.div>
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
-              MasterClass avec <span style={{ color: '#969196' }}>{data.items[0].snippet.videoOwnerChannelTitle}</span>
+              TRAVAIL INDÉPENDANT
             </Typography>
           </Box>
           <Grid
@@ -179,4 +180,4 @@ const Masterclass = ({ data }) => {
   );
 };
 
-export default Masterclass;
+export default TravailInde;

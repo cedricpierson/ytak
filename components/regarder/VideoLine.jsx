@@ -1,47 +1,45 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Button, Grid } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
+import Link from 'next/link';
 
-const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo }) => {
+const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category }) => {
   return (
-    <div>
-      <Grid
-        container
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-        sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          borderRadius: '5px',
-          overflowX: 'hidden',
-        }}
-      >
-        {!open &&
-          data.items.map((item) => {
-            const { id, snippet = {}, contentDetails = {} } = item;
-            const { videoId } = contentDetails;
-            const { title, thumbnails = {} } = snippet;
-            const { medium = {} } = thumbnails;
-            return (
-              <motion.div
-                whileHover={{
-                  scale: 1.2,
-                  zIndex: '1',
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-                whileTap={{ scale: 0.8 }}
-              >
+    <Grid
+      container
+      rowSpacing={1}
+      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      sx={{
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+        borderRadius: '5px',
+      }}
+    >
+      {!open &&
+        data &&
+        data.map((item) => {
+          // const { items[0] } = item;
+          // const { id, snippet = {}, contentDetails = {} } = items[0];
+          // const { videoId } = contentDetails;
+          // const { title, thumbnails = {} } = snippet;
+          // const { medium = {} } = thumbnails;
+          return (
+            <motion.div
+              whileHover={{
+                scale: 1.2,
+                zIndex: '1',
+                transition: {
+                  default: { ease: 'linear' },
+                },
+              }}
+              whileTap={{ scale: 0.8 }}
+            >
+              <Link href={`/${category}`}>
                 <Button
                   key={item.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setOpen(true);
-                    setVideo(item.contentDetails.videoId);
-                  }}
+                  onClick=""
                   sx={{
                     display: 'flex',
                     justifyContent: 'center',
@@ -53,25 +51,32 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo }) => {
                     margin: '0.2rem',
                   }}
                 >
-                  {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
+                  {!open && (
+                    <Image
+                      width={item.items[0].snippet.thumbnails.medium.width}
+                      height={item.items[0].snippet.thumbnails.medium.height}
+                      src={item.items[0].snippet.thumbnails.medium.url}
+                      alt=""
+                    />
+                  )}
                 </Button>
-              </motion.div>
-            );
-          })}
-        {open && (
-          <iframe
-            ref={videoRef}
-            width="560"
-            height="315"
-            src={`https://www.youtube.com/embed/${video}`}
-            title="Player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen
-          />
-        )}
-      </Grid>
-    </div>
+              </Link>
+            </motion.div>
+          );
+        })}
+      {open && (
+        <iframe
+          ref={videoRef}
+          width="560"
+          height="315"
+          src={`https://www.youtube.com/embed/${video}`}
+          title="Player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        />
+      )}
+    </Grid>
   );
 };
 
