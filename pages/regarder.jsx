@@ -14,7 +14,7 @@ import VideoLine from '../components/regarder/VideoLine';
 import { motion } from 'framer-motion';
 import ToTopScroll from '../components/regarder/ToTopScroll';
 
-const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
+// const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
   let playlists;
@@ -80,13 +80,12 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-  );
-  const data = await res.json();
+  // const res = await fetch(
+  //   `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  // );
+  // const data = await res.json();
   return {
     props: {
-      data,
       digital,
       travailInde,
       nature,
@@ -94,7 +93,7 @@ export async function getServerSideProps() {
   };
 }
 
-const Regarder = ({ data, digital, travailInde, nature }) => {
+const Regarder = ({ digital, travailInde, nature }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -133,7 +132,7 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
                 <Typography variant="hs" fontFamily="Expletus Sans" color="grey.200" id="to-top">
                   YTAK
                 </Typography>
-                <Typography variant="h3" fontFamily="Expletus Sans" color="grey.200" mt="-1.5rem">
+                <Typography variant="h3" fontFamily="Expletus Sans" color="grey.200" mt="-1.2rem">
                   MasterClasses
                 </Typography>
               </Link>
@@ -154,7 +153,7 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
           </Box>
         </Box>
 
-        <Box
+        {/* <Box
           sx={{
             display: 'flex',
             // justifyContent: 'center',
@@ -175,7 +174,7 @@ const Regarder = ({ data, digital, travailInde, nature }) => {
           setVideo={setVideo}
           category={'digital'}
         />
-        <DotsLeftMarquee />
+        <DotsLeftMarquee /> */}
         <Box
           sx={{
             display: 'flex',

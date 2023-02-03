@@ -137,7 +137,7 @@ const Profil = () => {
       <div className="content">
         <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <div class="content">
-            <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
+            <Box sx={{ margin: '1rem 1.8rem 1.5rem 1.8rem' }}>
               <Box
                 sx={{
                   display: 'flex',
@@ -160,7 +160,7 @@ const Profil = () => {
                       sx={{
                         height: '75px',
                         backgroundColor: 'primary.dark',
-                        margin: '0.2rem',
+                        margin: '0.15rem',
                         '&:hover': {
                           backgroundColor: 'secondary.dark',
                         },
@@ -176,13 +176,13 @@ const Profil = () => {
 
                 {/* <AvatarMenu /> */}
               </Box>
-              <Stack style={{ marginTop: '1rem', alignItems: 'center' }}>
+              <Stack style={{ marginTop: '0.5rem', alignItems: 'center' }}>
                 <Paper elevation={3}>
                   <Box
                     sx={{
                       display: 'flex',
                       flexDirection: 'column',
-                      padding: { xs: '1rem', sm: '2rem' },
+                      padding: { xs: '0.5rem', sm: '1rem' },
                       backgroundColor: 'primary.lighter',
                     }}
                   >
@@ -192,12 +192,8 @@ const Profil = () => {
                         flexDirection: 'column',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginBottom: '0.5rem',
                       }}
                     >
-                      <Typography variant="h1" fontFamily="Expletus Sans" color="initial">
-                        YTAK
-                      </Typography>
                       <Typography variant="h3" fontFamily="Expletus Sans" color="initial">
                         Profil
                       </Typography>
@@ -222,7 +218,6 @@ const Profil = () => {
                               width: '6rem',
                               height: '6rem',
                               borderRadius: '50%',
-                              marginTop: '1.5rem',
                             }}
                           >
                             <PhotoCamera />
@@ -277,8 +272,8 @@ const Profil = () => {
 
                       {/* Day of birth */}
                       <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="fr">
-                        <Stack spacing={3}>
-                          <Box sx={{ display: { xs: 'block', sm: 'none' }, marginTop: '1rem' }}>
+                        <Stack spacing={1}>
+                          <Box sx={{ display: { xs: 'block', sm: 'none' } }}>
                             <MobileDatePicker
                               required
                               disableFuture
@@ -320,10 +315,10 @@ const Profil = () => {
 
                       {/* Email */}
                       <FormControl variant="standard" required>
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end', marginTop: '1rem' }}>
+                        <Box>
                           <TextField
-                            required
                             fullWidth
+                            required
                             id="input-with-sx"
                             data="username"
                             label="Adresse mail"
@@ -337,6 +332,7 @@ const Profil = () => {
                             name="email"
                             error={formik.errors.email}
                             helperText={formik.errors.email}
+                            sx={{ marginTop: '0.5rem' }}
                           />
                         </Box>
                       </FormControl>
@@ -357,7 +353,7 @@ const Profil = () => {
                             width: '6rem',
                             height: '6rem',
                             borderRadius: '50%',
-                            marginTop: '1.5rem',
+                            marginTop: '1rem',
                           }}
                           variant="contained"
                         >

@@ -34,7 +34,11 @@ export default function AvatarMenu() {
       <Backdrop open={open} />
       <SpeedDial
         ariaLabel="SpeedDial tooltip example"
-        sx={{ position: 'absolute', top: 30, right: 16 }}
+        sx={{
+          position: 'absolute',
+          top: { xs: 20, sm: 30 },
+          right: { xs: '-1.3rem', sm: '1.5rem' },
+        }}
         icon={
           <motion.div
             whileHover={{
@@ -44,7 +48,11 @@ export default function AvatarMenu() {
               },
             }}
           >
-            <Avatar alt="Avatar" src={avatar} sx={{ width: 72, height: 72, borderRadius: '50%' }} />
+            <Avatar
+              alt="Avatar"
+              src={avatar}
+              sx={{ width: { xs: 50, sm: 72 }, height: { xs: 50, sm: 72 }, borderRadius: '50%' }}
+            />
           </motion.div>
         }
         onClose={handleClose}
@@ -71,17 +79,3 @@ export default function AvatarMenu() {
     </Box>
   );
 }
-//   <motion.div
-//     whileHover={{
-//       scale: 1.03,
-//       transition: {
-//         default: { ease: 'linear' },
-//       },
-//     }}
-//   >
-//     <Button sx={{ top: '4px', borderRadius: '50%' }}>
-//       <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
-//         <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
-//       </Paper>
-//     </Button>
-//   </motion.div>

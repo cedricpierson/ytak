@@ -19,7 +19,7 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category })
     >
       {!open &&
         data &&
-        data.map((item) => {
+        data.splice(1, 4).map((item) => {
           // const { items[0] } = item;
           // const { id, snippet = {}, contentDetails = {} } = items[0];
           // const { videoId } = contentDetails;

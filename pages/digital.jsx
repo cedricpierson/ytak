@@ -8,27 +8,43 @@ import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import AvatarMenu from '../components/AvatarMenu';
-
-const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
-
-const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
-
+import axios from 'axios';
 export async function getServerSideProps() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  let playlists;
+  let digital;
+  await axios
+    .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
+    .then((response) => {
+      playlists = response.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 
+  const playlistsDigital = playlists.filter((playlist) => playlist.categoryId === 1);
+  const digitalPromises = playlistsDigital.map((playlist) =>
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+      )
+      .catch((err) => {
+        console.error(err);
+      })
   );
-
-  const data = await res.json();
+  digital = await Promise.all(digitalPromises)
+    .then((results) => results.map((result) => result.data))
+    .catch((err) => {
+      console.error(err);
+    });
 
   return {
     props: {
-      data,
+      digital,
     },
   };
 }
 
-const Digital = ({ data }) => {
+const Digital = ({ digital }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -121,11 +137,7 @@ const Digital = ({ data }) => {
             }}
           >
             {!open &&
-              data.items.map((item) => {
-                const { id, snippet = {}, contentDetails = {} } = item;
-                const { videoId } = contentDetails;
-                const { title, thumbnails = {} } = snippet;
-                const { medium = {} } = thumbnails;
+              digital?.map((item) => {
                 return (
                   <motion.div
                     whileHover={{
@@ -155,7 +167,14 @@ const Digital = ({ data }) => {
                         margin: '0.2rem',
                       }}
                     >
-                      {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
+                      {!open && (
+                        <Image
+                          width={item.items[0].snippet.thumbnails.medium.width}
+                          height={item.items[0].snippet.thumbnails.medium.height}
+                          src={item.items[0].snippet.thumbnails.medium.url}
+                          alt=""
+                        />
+                      )}
                     </Button>
                   </motion.div>
                 );

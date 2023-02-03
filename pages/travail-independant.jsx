@@ -8,25 +8,44 @@ import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import AvatarMenu from '../components/AvatarMenu';
-
-const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
-
-const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
+import axios from 'axios';
 
 export async function getServerSideProps() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  let playlists;
+  let travailInde;
+  await axios
+    .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
+    .then((response) => {
+      playlists = response.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+
+  const playlistsTravailInde = playlists.filter((playlist) => playlist.categoryId === 2);
+  const travailIndePromises = playlistsTravailInde.map((playlist) =>
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+      )
+      .catch((err) => {
+        console.error(err);
+      })
   );
-  const data = await res.json();
+  travailInde = await Promise.all(travailIndePromises)
+    .then((results) => results.map((result) => result.data))
+    .catch((err) => {
+      console.error(err);
+    });
 
   return {
     props: {
-      data,
+      travailInde,
     },
   };
 }
 
-const TravailInde = ({ data }) => {
+const TravailInde = ({ travailInde }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -44,7 +63,7 @@ const TravailInde = ({ data }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-
+  console.log(travailInde[0].etag);
   return (
     <div style={{ backgroundColor: '#C7C1C7', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -120,11 +139,7 @@ const TravailInde = ({ data }) => {
             }}
           >
             {!open &&
-              data.items.map((item) => {
-                const { id, snippet = {}, contentDetails = {} } = item;
-                const { videoId } = contentDetails;
-                const { title, thumbnails = {} } = snippet;
-                const { medium = {} } = thumbnails;
+              travailInde?.map((item) => {
                 return (
                   <motion.div
                     whileHover={{
@@ -141,7 +156,7 @@ const TravailInde = ({ data }) => {
                       onClick={(e) => {
                         e.preventDefault();
                         setOpen(true);
-                        setVideo(item.contentDetails.videoId);
+                        setVideo(item.etag);
                       }}
                       sx={{
                         display: 'flex',
@@ -154,7 +169,14 @@ const TravailInde = ({ data }) => {
                         margin: '0.2rem',
                       }}
                     >
-                      {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
+                      {!open && (
+                        <Image
+                          width={item.items[0].snippet.thumbnails.medium.width}
+                          height={item.items[0].snippet.thumbnails.medium.height}
+                          src={item.items[0].snippet.thumbnails.medium.url}
+                          alt=""
+                        />
+                      )}
                     </Button>
                   </motion.div>
                 );

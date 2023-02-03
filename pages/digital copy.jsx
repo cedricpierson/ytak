@@ -8,44 +8,26 @@ import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import AvatarMenu from '../components/AvatarMenu';
-import axios from 'axios';
+
+const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
+
+const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
 
 export async function getServerSideProps() {
-  let playlists;
-  let nature;
-  await axios
-    .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
-    .then((response) => {
-      playlists = response.data;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-
-  const playlistsNature = playlists.filter((playlist) => playlist.categoryId === 3);
-  const NaturePromises = playlistsNature.map((playlist) =>
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-      )
-      .catch((err) => {
-        console.error(err);
-      })
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
   );
-  nature = await Promise.all(NaturePromises)
-    .then((results) => results.map((result) => result.data))
-    .catch((err) => {
-      console.error(err);
-    });
+
+  const data = await res.json();
 
   return {
     props: {
-      nature,
+      data,
     },
   };
 }
 
-const Nature = ({ nature }) => {
+const Digital = ({ data }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -65,7 +47,7 @@ const Nature = ({ nature }) => {
   }, [open]);
 
   return (
-    <div style={{ backgroundColor: '#a5d6a7', height: '100%' }}>
+    <div style={{ backgroundColor: '#d6a5d4', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div class="content">
           <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
@@ -122,8 +104,8 @@ const Nature = ({ nature }) => {
                 </Button>
               </motion.div>
             </Box>
-            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#519657' }}>
-              NATURE
+            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
+              DIGITAL
             </Typography>
           </Box>
           <Grid
@@ -138,7 +120,11 @@ const Nature = ({ nature }) => {
             }}
           >
             {!open &&
-              nature?.map((item) => {
+              data.items.map((item) => {
+                const { id, snippet = {}, contentDetails = {} } = item;
+                const { videoId } = contentDetails;
+                const { title, thumbnails = {} } = snippet;
+                const { medium = {} } = thumbnails;
                 return (
                   <motion.div
                     whileHover={{
@@ -148,7 +134,7 @@ const Nature = ({ nature }) => {
                         default: { ease: 'linear' },
                       },
                     }}
-                    whileTap={{ scale: 1.75 }}
+                    whileTap={{ scale: 0.8 }}
                   >
                     <Button
                       key={item.id}
@@ -168,20 +154,13 @@ const Nature = ({ nature }) => {
                         margin: '0.2rem',
                       }}
                     >
-                      {!open && (
-                        <Image
-                          width={item.items[0].snippet.thumbnails.medium.width}
-                          height={item.items[0].snippet.thumbnails.medium.height}
-                          src={item.items[0].snippet.thumbnails.medium.url}
-                          alt=""
-                        />
-                      )}
+                      {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
                     </Button>
                   </motion.div>
                 );
               })}
             {open && (
-              <Box sx={{ backgroundColor: 'primary.main', height: '100vh' }}>
+              <Box sx={{ backgroundColor: 'secondary.main', height: '100vh' }}>
                 <iframe
                   ref={videoRef}
                   width="560"
@@ -201,4 +180,4 @@ const Nature = ({ nature }) => {
   );
 };
 
-export default Nature;
+export default Digital;
