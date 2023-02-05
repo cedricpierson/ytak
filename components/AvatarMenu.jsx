@@ -30,7 +30,7 @@ export default function AvatarMenu() {
   const handleProfile = () => router.push('/profil');
 
   return (
-    <Box sx={{ height: 330, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: 115, marginRight: '-1.4rem', transform: 'translateZ(0px)', flexGrow: 1 }}>
       <Backdrop open={open} />
       <SpeedDial
         ariaLabel="SpeedDial tooltip example"

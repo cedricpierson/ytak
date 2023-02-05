@@ -1,8 +1,9 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Box, Button, Grid } from '@mui/material';
+import { Box, Button, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
+import { alpha } from '@mui/material';
 
 const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category }) => {
   return (
@@ -59,6 +60,18 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category })
                       alt=""
                     />
                   )}
+                  <Typography
+                    variant="p"
+                    sx={{
+                      position: 'absolute',
+                      bottom: '0',
+                      margin: '0.5rem 0.5rem 1rem 0.5rem',
+                      color: 'grey.400',
+                      backgroundColor: alpha('#000', 0.4),
+                    }}
+                  >
+                    {item.items[0].snippet.title}
+                  </Typography>
                 </Button>
               </Link>
             </motion.div>

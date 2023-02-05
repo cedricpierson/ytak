@@ -114,7 +114,7 @@ const Profil = () => {
     evt.preventDefault();
     if (inputRef.current.files[0].size >= 1000000) {
       setErrors('Le fichier est trop volumineux !');
-      console.log(size);
+      console.log(inputRef.current.files[0].size);
     } else {
       setAvatar('Avatar mis à jour');
       const formData = new FormData();
@@ -225,7 +225,7 @@ const Profil = () => {
                         </IconButton>
                       </Stack>
                     </form>
-                    <Typography>
+                    <Typography textAlign="center">
                       {errors}
                       {avatar}
                     </Typography>

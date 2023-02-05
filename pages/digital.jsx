@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import AvatarMenu from '../components/AvatarMenu';
 import axios from 'axios';
+import { alpha } from '@mui/material';
+
 export async function getServerSideProps() {
   let playlists;
   let digital;
@@ -102,24 +104,26 @@ const Digital = ({ digital }) => {
                 </Link>
               </motion.div>
               <NavMarquee />
-              <motion.div
-                whileHover={{
-                  scale: 1.03,
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: 'secondary.main',
-                    margin: '0.2rem 0.2rem 0.2rem -0.3rem',
-                    borderRadius: '50%',
+              <Link href="/profil">
+                <motion.div
+                  whileHover={{
+                    scale: 1.03,
+                    transition: {
+                      default: { ease: 'linear' },
+                    },
                   }}
                 >
-                  <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
-                </Button>
-              </motion.div>
+                  <Button
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      margin: '0.2rem 0.2rem 0.2rem -0.3rem',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
+                  </Button>
+                </motion.div>
+              </Link>
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
               DIGITAL
@@ -139,44 +143,61 @@ const Digital = ({ digital }) => {
             {!open &&
               digital?.map((item) => {
                 return (
-                  <motion.div
-                    whileHover={{
-                      scale: 1.2,
-                      zIndex: '1',
-                      transition: {
-                        default: { ease: 'linear' },
-                      },
-                    }}
-                    whileTap={{ scale: 0.8 }}
-                  >
-                    <Button
-                      key={item.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpen(true);
-                        setVideo(item.contentDetails.videoId);
+                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`}>
+                    <motion.div
+                      whileHover={{
+                        scale: 1.2,
+                        zIndex: '1',
+                        transition: {
+                          default: { ease: 'linear' },
+                        },
                       }}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        padding: '1rem',
-                        backgroundColor: 'grey.400',
-                        borderRadius: '5px',
-                        margin: '0.2rem',
-                      }}
+                      whileTap={{ scale: 0.8 }}
                     >
-                      {!open && (
-                        <Image
-                          width={item.items[0].snippet.thumbnails.medium.width}
-                          height={item.items[0].snippet.thumbnails.medium.height}
-                          src={item.items[0].snippet.thumbnails.medium.url}
-                          alt=""
-                        />
-                      )}
-                    </Button>
-                  </motion.div>
+                      <Button
+                        key={item.id}
+                        // onClick={(e) => {
+                        //   e.preventDefault();
+                        //   setOpen(true);
+                        //   setVideo(item.contentDetails.videoId);
+                        // }}
+                        sx={{
+                          position: 'relative',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          padding: '1rem',
+                          backgroundColor: 'grey.400',
+                          borderRadius: '5px',
+                          margin: '0.2rem',
+                        }}
+                      >
+                        {!open && (
+                          <Image
+                            width={item.items[0].snippet.thumbnails.medium.width}
+                            height={item.items[0].snippet.thumbnails.medium.height}
+                            src={item.items[0].snippet.thumbnails.medium.url}
+                            alt=""
+                          />
+                        )}
+                        <Typography
+                          variant="p"
+                          sx={{
+                            position: 'absolute',
+                            bottom: '0',
+                            margin: '0.5rem 0.5rem 1rem 0.5rem',
+                            color: 'grey.400',
+                            backgroundColor: alpha('#000', 0.4),
+                          }}
+                        >
+                          {item.items[0].snippet.title}
+
+                          <br />
+                        </Typography>
+                      </Button>
+                    </motion.div>
+                  </Link>
                 );
               })}
             {open && (
