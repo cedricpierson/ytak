@@ -9,18 +9,21 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar } from '@mui/material';
+import { AvatarContextProvider } from '../context/AvatarContext';
 import Link from 'next/link';
+import { useContext } from 'react';
 
 const actions = [
   { icon: <AccountCircleIcon sx={{ color: 'primary.main' }} />, name: 'Profil' },
   { icon: <LogoutIcon sx={{ color: 'primary.main' }} />, name: 'Déconnexion' },
 ];
 
-export default function AvatarMenu() {
+export default function AvatarMenu({ values }) {
+  //const { image, setImage } = useContext(AvatarContextProvider);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const avatar = '/images/yavuz.jpg'; /*`http://localhost:5001/${values?.currentUser?.imageUrl}`*/
+  const avatar = `http://localhost:5001/${values?.currentUser?.imageUrl}`;
   const router = useRouter();
   const signout = () => {
     window.localStorage.removeItem('accessToken');
