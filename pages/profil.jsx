@@ -66,6 +66,7 @@ const Profil = () => {
     if (reason === 'clickaway') {
       return;
     }
+    setMsg(false);
     setAvatar(false);
     setErrors(false);
   };
