@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
 import AvatarMenu from '../components/AvatarMenu';
-
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   Avatar,
@@ -18,16 +17,18 @@ import {
   IconButton,
   Link,
   Paper,
+  Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
+import Alert from '@mui/material/Alert';
 import PhotoCamera from '@mui/icons-material/PhotoCamera';
 import { Stack } from '@mui/system';
 import 'dayjs/locale/fr';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { format, compareAsc } from 'date-fns';
+import { format, compareAsc, set } from 'date-fns';
 import jwt_decode from 'jwt-decode';
 
 const ProfilChange = Yup.object({
@@ -50,9 +51,9 @@ const ProfilChange = Yup.object({
 
 const Profil = () => {
   const inputRef = useRef();
-  const [errors, setErrors] = useState();
-  const [avatar, setAvatar] = useState();
-  const [msg, setMsg] = useState();
+  const [errors, setErrors] = useState(false);
+  const [avatar, setAvatar] = useState(false);
+  const [msg, setMsg] = useState(false);
   const [decoded, setDecoded] = useState();
   const [image, setImage] = useState(false);
   const [birthday, setBirthday] = useState(dayjs());
@@ -60,6 +61,15 @@ const Profil = () => {
     currentUser: {},
   });
   const router = useRouter();
+
+  const handleClose = (reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMsg(false);
+    setAvatar(false);
+    setErrors(false);
+  };
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -103,7 +113,7 @@ const Profil = () => {
     axios
       .put(`http://localhost:5001/api/users/${decoded.id}`, userData)
       .then((response) => {
-        setMsg('Les informations ont été mise à jour');
+        setMsg(true);
         console.warn(response.status);
       })
       .then(router.push('profil'));
@@ -112,13 +122,15 @@ const Profil = () => {
   const hOnChange = (evt) => {
     evt.preventDefault();
     if (inputRef.current.files[0].size >= 1000000) {
-      setErrors('Le fichier est trop volumineux !');
+      setErrors(true);
     } else {
-      setAvatar('Avatar mis à jour');
       const formData = new FormData();
       formData.append('avatar', inputRef.current.files[0]);
       const token = localStorage.getItem('accessToken');
       const decoded = jwt_decode(token);
+      setAvatar(true);
+
+      setErrors(false);
 
       axios.post(`http://localhost:5001/api/users/avatar/${decoded.id}`, formData).then(() => {
         setImage(true);
@@ -223,11 +235,14 @@ const Profil = () => {
                         </IconButton>
                       </Stack>
                     </form>
-                    <Typography textAlign="center">
-                      {errors}
-                      {avatar}
+                    <Typography>
+                      <Snackbar open={errors} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert severity="warning">Le fichier est trop lourd</Alert>
+                      </Snackbar>
+                      <Snackbar open={avatar} autoHideDuration={6000} onClose={handleClose}>
+                        <Alert severity="success">Avatar mis à jour !</Alert>
+                      </Snackbar>
                     </Typography>
-
                     <form>
                       {/* Prénom + NOM */}
                       <Stack>
@@ -357,7 +372,9 @@ const Profil = () => {
                         >
                           Enregistrer
                         </Button>
-                        {msg}
+                        <Snackbar open={msg} autoHideDuration={6000} onClose={handleClose}>
+                          <Alert severity="success">Informations mises à jour !</Alert>
+                        </Snackbar>
                       </Stack>
                     </form>
                   </Box>
