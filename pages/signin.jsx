@@ -77,8 +77,8 @@ const Signin = () => {
   };
   const handleSignOut = () => {
     signOut({ redirect: false });
-    localStorage.removeItem(isAdmin, accessToken);
-    document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    localStorage.removeItem('isAdmin', 'accessToken');
+    // document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   };
   function getTitleCase(str) {
     const titleCase = str
@@ -152,7 +152,6 @@ const Signin = () => {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });
-        console.log(JSON.stringify(response));
         const accessToken = response?.data?.accessToken;
         const isAdmin = response?.data?.isAdmin;
         setAuth({ email, password, accessToken, isAdmin });
@@ -171,14 +170,12 @@ const Signin = () => {
         }
         // errRef.current.focus();
       }
-      let approved = false;
+      // let approved = false;
       const userData = {
         email: email,
         password: password,
       };
       axios.post(LOGIN_URL, userData).then((response) => {
-        console.log(response.status);
-        console.log(response.data);
         const decodedToken = response.data.accessToken ? jwt_decode(response.data.accessToken) : undefined;
         const isAdmin = decodedToken.isAdmin;
         if (response.status === 200) {
@@ -190,16 +187,15 @@ const Signin = () => {
         if (response.data.accessToken) {
           document.cookie = `name=${response.data.accessToken}`;
           localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
-          approved = true;
+          // approved = true;
           setStatus(true);
         }
       });
     }
   };
-
   return (
     <>
-      {success && approved ? (
+      {success ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <Alert severity="success">Vous êtes connecté</Alert>
         </Box>

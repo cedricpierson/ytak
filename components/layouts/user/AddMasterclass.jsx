@@ -33,7 +33,6 @@ const AddMasterclass = ({ selectionModel, deleteRow }) => {
   const handleClickAway = () => {
     setOpenNew(false);
   };
-  console.log(newMasterclass);
 
   const handleAddNewMasterclass = () => {
     axios

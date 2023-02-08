@@ -37,7 +37,7 @@ export default function AvatarMenu() {
         sx={{
           position: 'absolute',
           top: { xs: 20, sm: 30 },
-          right: { xs: '-1.3rem', sm: '1.5rem' },
+          right: { xs: '1.5rem', sm: '2.5rem' },
         }}
         icon={
           <motion.div

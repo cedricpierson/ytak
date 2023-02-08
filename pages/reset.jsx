@@ -42,6 +42,7 @@ const SignupSchema = Yup.object({
 
 const Reset = () => {
   const router = useRouter();
+  const [values, setValues] = useState('');
 
   const formik = useFormik({
     initialValues: {

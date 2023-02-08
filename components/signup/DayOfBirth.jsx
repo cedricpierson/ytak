@@ -39,7 +39,6 @@ export default function DayOfBirth({ values, setValues, errors }) {
             maxDate={dayjs()}
             onChange={(newValue) => {
               setValues(dayjs(newValue).format('YYYY/MM/DD'));
-              console.log(values.birthday);
             }}
             renderInput={(params) => <TextField {...params} />}
             error={errors.birthday}

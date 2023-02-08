@@ -35,7 +35,6 @@ const AddUser = ({ selectionModel, deleteRow }) => {
   const handleClickAway = () => {
     setOpenNew(false);
   };
-  console.log(newUser);
 
   const handleAddNewUser = () => {
     axios

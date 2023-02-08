@@ -6,7 +6,6 @@ import CachedIcon from '@mui/icons-material/Cached';
 import Dashboard from '../../components/layouts/admin/nav/Dashboard';
 import AddMasterclass from '../../components/layouts/user/AddMasterclass';
 import Head from 'next/head';
-import dayjs from 'dayjs';
 
 function CustomToolbar() {
   return (
@@ -71,7 +70,7 @@ export default function Masterclass() {
         isPremium: newRow.isPremium,
         categoryId: newRow.categoryId,
       };
-      console.log(dataToUpdate);
+
       axios
         .put(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass/${newRow.id}`, dataToUpdate)
         .then((res) => {

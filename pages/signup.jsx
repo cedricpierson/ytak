@@ -60,6 +60,7 @@ const Signup = () => {
   const [birthday, setBirthday] = useState(dayjs());
   const { data: session } = useSession();
   const [errMsg, setErrMsg] = useState('');
+  const errRef = useRef();
 
   const { setAuth } = useContext(AuthContext);
 
@@ -100,8 +101,8 @@ const Signup = () => {
   };
   const handleSignOut = () => {
     signOut({ redirect: false });
-    localStorage.removeItem(isAdmin, accessToken);
-    document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    localStorage.removeItem('isAdmin', 'accessToken');
+    // document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   };
 
   const handleChange = (prop) => (e) => {

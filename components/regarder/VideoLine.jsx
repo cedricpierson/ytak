@@ -20,14 +20,11 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category })
     >
       {!open &&
         data &&
-        data.splice(1, 4).map((item) => {
-          // const { items[0] } = item;
-          // const { id, snippet = {}, contentDetails = {} } = items[0];
-          // const { videoId } = contentDetails;
-          // const { title, thumbnails = {} } = snippet;
-          // const { medium = {} } = thumbnails;
+        category &&
+        data?.splice(1, 4).map((item) => {
           return (
             <motion.div
+              key={item?.id}
               whileHover={{
                 scale: 1.2,
                 zIndex: '1',
@@ -39,8 +36,7 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category })
             >
               <Link href={`/${category}`}>
                 <Button
-                  key={item.id}
-                  onClick=""
+                  key={item?.id}
                   sx={{
                     display: 'flex',
                     justifyContent: 'center',

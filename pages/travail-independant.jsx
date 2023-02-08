@@ -64,7 +64,7 @@ const TravailInde = ({ travailInde }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-  console.log(travailInde[0].etag);
+
   return (
     <div style={{ backgroundColor: '#C7C1C7', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -143,8 +143,9 @@ const TravailInde = ({ travailInde }) => {
             {!open &&
               travailInde?.map((item) => {
                 return (
-                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`}>
+                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`} key={item.id}>
                     <motion.div
+                      key={item.id}
                       whileHover={{
                         scale: 1.2,
                         zIndex: '1',

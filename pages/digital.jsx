@@ -143,8 +143,9 @@ const Digital = ({ digital }) => {
             {!open &&
               digital?.map((item) => {
                 return (
-                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`}>
+                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`} key={item.id}>
                     <motion.div
+                      key={item.id}
                       whileHover={{
                         scale: 1.2,
                         zIndex: '1',

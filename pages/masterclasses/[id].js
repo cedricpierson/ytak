@@ -50,7 +50,7 @@ const Masterclass = ({ playlist }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-  console.log(playlist);
+  s;
   return (
     <Stack sx={{ backgroundColor: 'grey.800', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -90,24 +90,26 @@ const Masterclass = ({ playlist }) => {
                 </Link>
               </motion.div>
               <NavMarquee />
-              <motion.div
-                whileHover={{
-                  scale: 1.03,
-                  transition: {
-                    default: { ease: 'linear' },
-                  },
-                }}
-              >
-                <Button
-                  sx={{
-                    backgroundColor: 'secondary.main',
-                    margin: '0.2rem 0.2rem 0.2rem -0.3rem',
-                    borderRadius: '50%',
+              <Link href="/profil">
+                <motion.div
+                  whileHover={{
+                    scale: 1.03,
+                    transition: {
+                      default: { ease: 'linear' },
+                    },
                   }}
                 >
-                  <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
-                </Button>
-              </motion.div>
+                  <Button
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      margin: '0.2rem 0.2rem 0.2rem -0.3rem',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
+                  </Button>
+                </motion.div>
+              </Link>
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
               Masterclass avec <span style={{ color: '#fff' }}>{playlist.items[0].snippet.videoOwnerChannelTitle}</span>
@@ -135,6 +137,7 @@ const Masterclass = ({ playlist }) => {
                 const { medium = {} } = thumbnails;
                 return (
                   <motion.div
+                    key={item.id}
                     whileHover={{
                       scale: 1.2,
                       zIndex: '1',

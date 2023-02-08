@@ -74,7 +74,6 @@ const Profil = () => {
     });
   }, [image]);
 
-  console.log(values);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -114,7 +113,6 @@ const Profil = () => {
     evt.preventDefault();
     if (inputRef.current.files[0].size >= 1000000) {
       setErrors('Le fichier est trop volumineux !');
-      console.log(inputRef.current.files[0].size);
     } else {
       setAvatar('Avatar mis à jour');
       const formData = new FormData();

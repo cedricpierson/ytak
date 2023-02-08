@@ -64,7 +64,7 @@ const Nature = ({ nature }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-  console.log(nature);
+
   return (
     <div style={{ backgroundColor: '#a5d6a7', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -143,7 +143,7 @@ const Nature = ({ nature }) => {
             {!open &&
               nature?.map((item) => {
                 return (
-                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`}>
+                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`} key={item.id}>
                     <motion.div
                       whileHover={{
                         scale: 1.2,

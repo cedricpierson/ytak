@@ -10,11 +10,13 @@ import DotsLeftMarquee from '../components/dotsLeftMarquee';
 import DotsRightMarquee from '../components/dotsRightMarquee';
 import AvatarMenu from '../components/AvatarMenu';
 import axios from 'axios';
-import VideoLine from '../components/regarder/VideoLine';
 import { motion } from 'framer-motion';
 import ToTopScroll from '../components/regarder/ToTopScroll';
+import dynamic from 'next/dynamic';
 
-// const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
+const VideoLine = dynamic(() => import('../components/regarder/VideoLine'), {
+  loading: () => 'Chargement...',
+});
 
 export async function getServerSideProps() {
   let playlists;
@@ -32,7 +34,7 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  const playlistsDigital = playlists.filter((playlist) => playlist.categoryId === 1);
+  const playlistsDigital = playlists?.filter((playlist) => playlist.categoryId === 1);
   const digitalPromises = playlistsDigital.map((playlist) =>
     axios
       .get(
@@ -48,7 +50,7 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  const playlistsTravailInde = playlists.filter((playlist) => playlist.categoryId === 2);
+  const playlistsTravailInde = playlists?.filter((playlist) => playlist.categoryId === 2);
   const travailIndePromises = playlistsTravailInde.map((playlist) =>
     axios
       .get(
@@ -64,7 +66,7 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  const playlistsNature = playlists.filter((playlist) => playlist.categoryId === 3);
+  const playlistsNature = playlists?.filter((playlist) => playlist.categoryId === 3);
   const NaturePromises = playlistsNature.map((playlist) =>
     axios
       .get(
@@ -80,10 +82,6 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  // const res = await fetch(
-  //   `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-  // );
-  // const data = await res.json();
   return {
     props: {
       digital,
@@ -97,7 +95,6 @@ const Regarder = ({ digital, travailInde, nature }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
-  console.log(digital[0].items[0]);
 
   useEffect(() => {
     const handler = (e) => {
@@ -112,14 +109,15 @@ const Regarder = ({ digital, travailInde, nature }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
+
   return (
     <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
       <div class="bg" />
       <div class="bg bg2" />
       <div class="bg bg3" />
       <div class="content">
-        <Box sx={{ backgroundColor: 'grey.800', height: '350px', margin: '0' }}>
-          <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
+        <Box sx={{ backgroundColor: 'grey.800', margin: '0' }}>
+          <Box sx={{ margin: '0 2rem 0rem 1.8rem' }}>
             <Box
               sx={{
                 display: 'flex',
@@ -128,16 +126,28 @@ const Regarder = ({ digital, travailInde, nature }) => {
                 borderRadius: '10px',
               }}
             >
-              <Link href="/">
-                <Typography variant="hs" fontFamily="Expletus Sans" color="grey.200" id="to-top">
-                  YTAK
-                </Typography>
-                <Typography variant="h3" fontFamily="Expletus Sans" color="grey.200" mt="-1.2rem">
-                  MasterClasses
-                </Typography>
-              </Link>
-
-              <AvatarMenu />
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%', minHeight: '300px' }}>
+                <div style={{ position: 'absolute', marginLeft: '1rem' }}>
+                  <Link href="/">
+                    <Typography variant="hs" fontFamily="Expletus Sans" color="grey.200" id="to-top">
+                      YTAK
+                    </Typography>
+                    <Typography variant="h3" fontFamily="Expletus Sans" color="grey.200" mt="-1.2rem">
+                      MasterClasses
+                    </Typography>
+                  </Link>
+                </div>
+                <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                  <video
+                    src="/videos/ytakHero.mp4"
+                    autoPlay
+                    loop
+                    muted
+                    style={{ width: '100vw', maxHeight: '300px', objectFit: 'cover' }}
+                  />
+                </Box>
+                <AvatarMenu />
+              </Box>
             </Box>
           </Box>
         </Box>
@@ -145,42 +155,20 @@ const Regarder = ({ digital, travailInde, nature }) => {
           <Box
             sx={{
               display: 'flex',
+              alignItems: 'center',
               justifyContent: 'space-between',
+              flexDirection: 'column',
               backgroundColor: 'grey.800',
             }}
           >
             <NavMarquee />
           </Box>
         </Box>
-
-        {/* <Box
-          sx={{
-            display: 'flex',
-            // justifyContent: 'center',
-            alignItems: 'center',
-            margin: '0.5rem 2rem',
-          }}
-        >
-          <Typography variant="h4" color="grey.800">
-            Les + vues
-          </Typography>
-        </Box>
-        <VideoLine
-          data={digital}
-          videoRef={videoRef}
-          open={open}
-          setOpen={setOpen}
-          video={video}
-          setVideo={setVideo}
-          category={'digital'}
-        />
-        <DotsLeftMarquee /> */}
         <Box
           sx={{
             display: 'flex',
-            // justifyContent: 'center',
             alignItems: 'center',
-            margin: '0.5rem 2rem',
+            margin: '0.5rem 3rem',
           }}
         >
           <motion.div
@@ -200,22 +188,24 @@ const Regarder = ({ digital, travailInde, nature }) => {
             </Link>
           </motion.div>
         </Box>
-        <VideoLine
-          data={digital}
-          videoRef={videoRef}
-          open={open}
-          setOpen={setOpen}
-          video={video}
-          setVideo={setVideo}
-          category={'digital'}
-        />
+        {digital && (
+          <VideoLine
+            data={digital}
+            videoRef={videoRef}
+            open={open}
+            setOpen={setOpen}
+            video={video}
+            setVideo={setVideo}
+            category={'digital'}
+          />
+        )}
         <DotsRightMarquee />
         <Box
           sx={{
             display: 'flex',
             // justifyContent: 'center',
             alignItems: 'center',
-            margin: '0.5rem 2rem',
+            margin: '0.5rem 3rem',
           }}
         >
           <motion.div
@@ -235,22 +225,24 @@ const Regarder = ({ digital, travailInde, nature }) => {
             </Link>
           </motion.div>
         </Box>
-        <VideoLine
-          data={travailInde}
-          videoRef={videoRef}
-          open={open}
-          setOpen={setOpen}
-          video={video}
-          setVideo={setVideo}
-          category={'travail-independant'}
-        />
+        {travailInde && (
+          <VideoLine
+            data={travailInde}
+            videoRef={videoRef}
+            open={open}
+            setOpen={setOpen}
+            video={video}
+            setVideo={setVideo}
+            category={'travail-independant'}
+          />
+        )}
         <DotsLeftMarquee />
         <Box
           sx={{
             display: 'flex',
             // justifyContent: 'center',
             alignItems: 'center',
-            margin: '0.5rem 2rem',
+            margin: '0.5rem 3rem',
           }}
         >
           <motion.div
@@ -270,15 +262,17 @@ const Regarder = ({ digital, travailInde, nature }) => {
             </Link>
           </motion.div>
         </Box>
-        <VideoLine
-          data={nature}
-          videoRef={videoRef}
-          open={open}
-          setOpen={setOpen}
-          video={video}
-          setVideo={setVideo}
-          category={'nature'}
-        />
+        {nature && (
+          <VideoLine
+            data={nature}
+            videoRef={videoRef}
+            open={open}
+            setOpen={setOpen}
+            video={video}
+            setVideo={setVideo}
+            category={'nature'}
+          />
+        )}
         {/* <DotsLeftMarquee /> */}
       </div>
       <ToTopScroll />

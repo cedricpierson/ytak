@@ -42,11 +42,6 @@ export default function Users() {
   const [snackbar, setSnackbar] = useState(null);
   const [selectionModel, setSelectionModel] = useState([]);
 
-  const handleAddNewUser = () => {
-    setUsers([...users, newUser, values]);
-    setNewUser({});
-  };
-
   const handleCloseSnackbar = () => setSnackbar(null);
 
   useEffect(() => {
@@ -126,7 +121,7 @@ export default function Users() {
   };
 
   const title = 'Utilisateurs';
-  console.log(selectionModel);
+
   return (
     <>
       <Head>
