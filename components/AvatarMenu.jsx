@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
+import { useContext } from 'react';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
 import Backdrop from '@mui/material/Backdrop';
@@ -9,17 +10,16 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Avatar } from '@mui/material';
-import { AvatarContextProvider } from '../context/AvatarContext';
+import AvatarContext from '../context/AvatarContext';
 import Link from 'next/link';
-import { useContext } from 'react';
 
 const actions = [
   { icon: <AccountCircleIcon sx={{ color: 'primary.main' }} />, name: 'Profil' },
   { icon: <LogoutIcon sx={{ color: 'primary.main' }} />, name: 'Déconnexion' },
 ];
 
-export default function AvatarMenu({ values }) {
-  //const { image, setImage } = useContext(AvatarContextProvider);
+export default function AvatarMenu() {
+  const { values } = useContext(AvatarContext);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
