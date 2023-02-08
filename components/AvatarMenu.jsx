@@ -33,11 +33,15 @@ export default function AvatarMenu({ values }) {
   const handleProfile = () => router.push('/profil');
 
   return (
-    <Box sx={{ height: 330, transform: 'translateZ(0px)', flexGrow: 1 }}>
+    <Box sx={{ height: 115, marginRight: '-1.4rem', transform: 'translateZ(0px)', flexGrow: 1 }}>
       <Backdrop open={open} />
       <SpeedDial
         ariaLabel="SpeedDial tooltip example"
-        sx={{ position: 'absolute', top: 30, right: 16 }}
+        sx={{
+          position: 'absolute',
+          top: { xs: 20, sm: 30 },
+          right: { xs: '1.5rem', sm: '2.5rem' },
+        }}
         icon={
           <motion.div
             whileHover={{
@@ -47,7 +51,11 @@ export default function AvatarMenu({ values }) {
               },
             }}
           >
-            <Avatar alt="Avatar" src={avatar} sx={{ width: 72, height: 72, borderRadius: '50%' }} />
+            <Avatar
+              alt="Avatar"
+              src={avatar}
+              sx={{ width: { xs: 50, sm: 72 }, height: { xs: 50, sm: 72 }, borderRadius: '50%' }}
+            />
           </motion.div>
         }
         onClose={handleClose}
@@ -74,17 +82,3 @@ export default function AvatarMenu({ values }) {
     </Box>
   );
 }
-//   <motion.div
-//     whileHover={{
-//       scale: 1.03,
-//       transition: {
-//         default: { ease: 'linear' },
-//       },
-//     }}
-//   >
-//     <Button sx={{ top: '4px', borderRadius: '50%' }}>
-//       <Paper sx={{ width: 72, height: 72, borderRadius: '50%' }} variant="outlined" elevation={12}>
-//         <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 72, height: 72, borderRadius: '50%' }} />
-//       </Paper>
-//     </Button>
-//   </motion.div>

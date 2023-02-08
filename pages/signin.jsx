@@ -4,32 +4,25 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import AuthContext from '../context/AuthProvider';
 import axios from './api/axios';
 import jwt_decode from 'jwt-decode';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import GoogleIcon from '@mui/icons-material/Google';
-// import GitHubIcon from '@mui/icons-material/GitHub';
+import { GoogleIcon, Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
 import {
+  Box,
+  Input,
+  InputLabel,
+  InputAdornment,
+  InputAdornment,
+  FormControl,
   Alert,
   Button,
-  Checkbox,
   Container,
-  FormControlLabel,
-  FormGroup,
   IconButton,
   Link,
+  Paper,
   Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Stack } from '@mui/system';
-import Paper from '@mui/material/Paper';
-import Image from 'next/image';
 
 const LOGIN_URL = '/auth/signin';
 
@@ -77,8 +70,8 @@ const Signin = () => {
   };
   const handleSignOut = () => {
     signOut({ redirect: false });
-    localStorage.removeItem(isAdmin, accessToken);
-    document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+    localStorage.removeItem('isAdmin', 'accessToken');
+    // document.cookie = `name=${response.data.accessToken}; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
   };
   function getTitleCase(str) {
     const titleCase = str
@@ -152,7 +145,6 @@ const Signin = () => {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true,
         });
-        console.log(JSON.stringify(response));
         const accessToken = response?.data?.accessToken;
         const isAdmin = response?.data?.isAdmin;
         setAuth({ email, password, accessToken, isAdmin });
@@ -171,14 +163,12 @@ const Signin = () => {
         }
         // errRef.current.focus();
       }
-      let approved = false;
+      // let approved = false;
       const userData = {
         email: email,
         password: password,
       };
       axios.post(LOGIN_URL, userData).then((response) => {
-        console.log(response.status);
-        console.log(response.data);
         const decodedToken = response.data.accessToken ? jwt_decode(response.data.accessToken) : undefined;
         const isAdmin = decodedToken.isAdmin;
         if (response.status === 200) {
@@ -190,16 +180,15 @@ const Signin = () => {
         if (response.data.accessToken) {
           document.cookie = `name=${response.data.accessToken}`;
           localStorage.setItem('accessToken', JSON.stringify(response.data.accessToken));
-          approved = true;
+          // approved = true;
           setStatus(true);
         }
       });
     }
   };
-
   return (
     <>
-      {success && approved ? (
+      {success ? (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
           <Alert severity="success">Vous êtes connecté</Alert>
         </Box>

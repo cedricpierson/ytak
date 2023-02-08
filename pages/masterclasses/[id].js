@@ -1,47 +1,33 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { alpha, Avatar, Button, Box, Grid, Container, Typography } from '@mui/material';
+import { alpha, Avatar, Box, Grid, Container, Button, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import NavMarquee from '../components/navMarquee';
-import axios from 'axios';
+import NavMarquee from '../../components/navMarquee';
 
-export async function getServerSideProps() {
-  let playlists;
-  let travailInde;
-  await axios
-    .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
-    .then((response) => {
-      playlists = response.data;
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+export async function getStaticPaths() {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`);
+  const playlists = await res.json();
 
-  const playlistsTravailInde = playlists.filter((playlist) => playlist.categoryId === 2);
-  const travailIndePromises = playlistsTravailInde.map((playlist) =>
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
-      )
-      .catch((err) => {
-        console.error(err);
-      })
-  );
-  travailInde = await Promise.all(travailIndePromises)
-    .then((results) => results.map((result) => result.data))
-    .catch((err) => {
-      console.error(err);
-    });
+  // Get the paths we want to pre-render based on posts
+  const paths = playlists.map((playlist) => ({
+    params: { id: playlist.playlistId },
+  }));
 
-  return {
-    props: {
-      travailInde,
-    },
-  };
+  // We'll pre-render only these paths at build time.
+  // { fallback: false } means other routes should 404.
+  return { paths, fallback: false };
 }
 
-const TravailInde = ({ travailInde }) => {
+export async function getStaticProps({ params }) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${params.id}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  );
+  const playlist = await res.json();
+  return { props: { playlist } };
+}
+
+const Masterclass = ({ playlist }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -61,7 +47,7 @@ const TravailInde = ({ travailInde }) => {
   }, [open]);
 
   return (
-    <div style={{ backgroundColor: '#C7C1C7', height: '100%' }}>
+    <Stack sx={{ backgroundColor: 'grey.800', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div class="content">
           <Box sx={{ margin: '2rem 3.2rem 1.5rem 1.8rem' }}>
@@ -120,8 +106,11 @@ const TravailInde = ({ travailInde }) => {
                 </motion.div>
               </Link>
             </Box>
-            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem' }}>
-              TRAVAIL INDÉPENDANT
+            <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
+              Masterclass avec <span style={{ color: '#fff' }}>{playlist.items[0].snippet.videoOwnerChannelTitle}</span>
+            </Typography>
+            <Typography variant="h6" sx={{ margin: '0.5rem 1rem 1rem 1rem', color: '#bd64bb' }}>
+              <span style={{ color: '#fff' }}>{playlist.items[0].snippet.title}</span>
             </Typography>
           </Box>
           <Grid
@@ -136,66 +125,61 @@ const TravailInde = ({ travailInde }) => {
             }}
           >
             {!open &&
-              travailInde?.map((item) => {
+              playlist.items.map((item) => {
+                const { id, snippet = {}, contentDetails = {} } = item;
+                const { videoId } = contentDetails;
+                const { title, thumbnails = {} } = snippet;
+                const { medium = {} } = thumbnails;
                 return (
-                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`} key={item.id}>
-                    <motion.div
+                  <motion.div
+                    key={item.id}
+                    whileHover={{
+                      scale: 1.2,
+                      zIndex: '1',
+                      transition: {
+                        default: { ease: 'linear' },
+                      },
+                    }}
+                    whileTap={{ scale: 0.8 }}
+                  >
+                    <Button
                       key={item.id}
-                      whileHover={{
-                        scale: 1.2,
-                        zIndex: '1',
-                        transition: {
-                          default: { ease: 'linear' },
-                        },
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setOpen(true);
+                        setVideo(item.contentDetails.videoId);
                       }}
-                      whileTap={{ scale: 0.8 }}
+                      sx={{
+                        position: 'relative',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                        padding: '1rem',
+                        backgroundColor: 'grey.400',
+                        borderRadius: '5px',
+                        margin: '0.2rem',
+                      }}
                     >
-                      <Button
-                        key={item.id}
-                        // onClick={(e) => {
-                        //   e.preventDefault();
-                        //   setOpen(true);
-                        //   setVideo(item.etag);
-                        // }}
+                      {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
+                      <Typography
+                        variant="p"
                         sx={{
-                          position: 'relative',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          flexDirection: 'row',
-                          padding: '1rem',
-                          backgroundColor: 'grey.400',
-                          borderRadius: '5px',
-                          margin: '0.2rem',
+                          position: 'absolute',
+                          bottom: '0',
+                          margin: '0.5rem 0.5rem 1rem 0.5rem',
+                          color: '#bd64bb',
+                          backgroundColor: alpha('#000', 0.3),
                         }}
                       >
-                        {!open && (
-                          <Image
-                            width={item.items[0].snippet.thumbnails.medium.width}
-                            height={item.items[0].snippet.thumbnails.medium.height}
-                            src={item.items[0].snippet.thumbnails.medium.url}
-                            alt=""
-                          />
-                        )}
-                        <Typography
-                          variant="p"
-                          sx={{
-                            position: 'absolute',
-                            bottom: '0',
-                            margin: '0.5rem 0.5rem 1rem 0.5rem',
-                            color: 'grey.400',
-                            backgroundColor: alpha('#000', 0.4),
-                          }}
-                        >
-                          <span>{item.items[0].snippet.title}</span>
-                        </Typography>
-                      </Button>
-                    </motion.div>
-                  </Link>
+                        <span style={{ color: '#fff' }}>{item.snippet.description.split('\n', 1)[0].slice(0, 80)}</span>
+                      </Typography>
+                    </Button>
+                  </motion.div>
                 );
               })}
             {open && (
-              <Box sx={{ backgroundColor: '#C7C1C7', height: '100vh' }}>
+              <Box sx={{ backgroundColor: 'inherit', height: '100vh' }}>
                 <iframe
                   ref={videoRef}
                   width="560"
@@ -211,8 +195,8 @@ const TravailInde = ({ travailInde }) => {
           </Grid>
         </div>
       </Container>
-    </div>
+    </Stack>
   );
 };
 
-export default TravailInde;
+export default Masterclass;

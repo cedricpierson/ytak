@@ -1,34 +1,47 @@
-import { Avatar, Box, Card, Container, Paper, Stack } from '@mui/material';
-import Grid from '@mui/material/Grid'; // Grid version 1
+import React, { useState, useEffect, useRef } from 'react';
+import { alpha, Avatar, Box, Button, Container, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect, useRef } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
-import AvatarMenu from '../components/AvatarMenu';
-
-const YOUTUBE_ENDPOINT = 'https://www.googleapis.com/youtube/v3/playlistItems';
-
-const PLAYLIST_ID = 'PL0vfts4VzfNgUUEtEjxDVfh4iocVR3qIb';
+import axios from 'axios';
 
 export async function getServerSideProps() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${PLAYLIST_ID}&maxResults=4&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+  let playlists;
+  let digital;
+  await axios
+    .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
+    .then((response) => {
+      playlists = response.data;
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 
+  const playlistsDigital = playlists.filter((playlist) => playlist.categoryId === 1);
+  const digitalPromises = playlistsDigital.map((playlist) =>
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
+      )
+      .catch((err) => {
+        console.error(err);
+      })
   );
-
-  const data = await res.json();
+  digital = await Promise.all(digitalPromises)
+    .then((results) => results.map((result) => result.data))
+    .catch((err) => {
+      console.error(err);
+    });
 
   return {
     props: {
-      data,
+      digital,
     },
   };
 }
 
-const Masterclass = ({ data }) => {
+const Digital = ({ digital }) => {
   const videoRef = useRef();
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
@@ -86,8 +99,26 @@ const Masterclass = ({ data }) => {
                 </Link>
               </motion.div>
               <NavMarquee />
-
-              <AvatarMenu />
+              <Link href="/profil">
+                <motion.div
+                  whileHover={{
+                    scale: 1.03,
+                    transition: {
+                      default: { ease: 'linear' },
+                    },
+                  }}
+                >
+                  <Button
+                    sx={{
+                      backgroundColor: 'secondary.main',
+                      margin: '0.2rem 0.2rem 0.2rem -0.3rem',
+                      borderRadius: '50%',
+                    }}
+                  >
+                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
+                  </Button>
+                </motion.div>
+              </Link>
             </Box>
             <Typography variant="h3" sx={{ margin: '1rem 1rem 0 1rem', color: '#bd64bb' }}>
               DIGITAL
@@ -105,43 +136,64 @@ const Masterclass = ({ data }) => {
             }}
           >
             {!open &&
-              data.items.map((item) => {
-                const { id, snippet = {}, contentDetails = {} } = item;
-                const { videoId } = contentDetails;
-                const { title, thumbnails = {} } = snippet;
-                const { medium = {} } = thumbnails;
+              digital?.map((item) => {
                 return (
-                  <motion.div
-                    whileHover={{
-                      scale: 1.2,
-                      zIndex: '1',
-                      transition: {
-                        default: { ease: 'linear' },
-                      },
-                    }}
-                    whileTap={{ scale: 0.8 }}
-                  >
-                    <Button
+                  <Link href={`/masterclasses/${item.items[0].snippet.playlistId}`} key={item.id}>
+                    <motion.div
                       key={item.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setOpen(true);
-                        setVideo(item.contentDetails.videoId);
+                      whileHover={{
+                        scale: 1.2,
+                        zIndex: '1',
+                        transition: {
+                          default: { ease: 'linear' },
+                        },
                       }}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row',
-                        padding: '1rem',
-                        backgroundColor: 'grey.400',
-                        borderRadius: '5px',
-                        margin: '0.2rem',
-                      }}
+                      whileTap={{ scale: 0.8 }}
                     >
-                      {!open && <Image width={medium.width} height={medium.height} src={medium.url} alt="" />}
-                    </Button>
-                  </motion.div>
+                      <Button
+                        key={item.id}
+                        // onClick={(e) => {
+                        //   e.preventDefault();
+                        //   setOpen(true);
+                        //   setVideo(item.contentDetails.videoId);
+                        // }}
+                        sx={{
+                          position: 'relative',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          padding: '1rem',
+                          backgroundColor: 'grey.400',
+                          borderRadius: '5px',
+                          margin: '0.2rem',
+                        }}
+                      >
+                        {!open && (
+                          <Image
+                            width={item.items[0].snippet.thumbnails.medium.width}
+                            height={item.items[0].snippet.thumbnails.medium.height}
+                            src={item.items[0].snippet.thumbnails.medium.url}
+                            alt=""
+                          />
+                        )}
+                        <Typography
+                          variant="p"
+                          sx={{
+                            position: 'absolute',
+                            bottom: '0',
+                            margin: '0.5rem 0.5rem 1rem 0.5rem',
+                            color: 'grey.400',
+                            backgroundColor: alpha('#000', 0.4),
+                          }}
+                        >
+                          {item.items[0].snippet.title}
+
+                          <br />
+                        </Typography>
+                      </Button>
+                    </motion.div>
+                  </Link>
                 );
               })}
             {open && (
@@ -165,4 +217,4 @@ const Masterclass = ({ data }) => {
   );
 };
 
-export default Masterclass;
+export default Digital;
