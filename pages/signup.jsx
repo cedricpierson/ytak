@@ -4,35 +4,25 @@ import { useFormik } from 'formik';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import * as Yup from 'yup';
 import axios from 'axios';
-import dayjs from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import GoogleIcon from '@mui/icons-material/Google';
 import {
   Alert,
-  AlertTitle,
   Box,
   Button,
-  Checkbox,
   Container,
   FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
   IconButton,
-  Input,
   InputAdornment,
   InputLabel,
-  Link,
-  MuiAlert,
   Paper,
   Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
-import { Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AccountCircle, GoogleIcon } from '@mui/icons-material';
 import { Stack } from '@mui/system';
-import DayOfBirth from '../components/signup/DayOfBirth';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr';
+import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

@@ -4,32 +4,25 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import AuthContext from '../context/AuthProvider';
 import axios from './api/axios';
 import jwt_decode from 'jwt-decode';
-import Box from '@mui/material/Box';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import GoogleIcon from '@mui/icons-material/Google';
-// import GitHubIcon from '@mui/icons-material/GitHub';
+import { GoogleIcon, Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
 import {
+  Box,
+  Input,
+  InputLabel,
+  InputAdornment,
+  InputAdornment,
+  FormControl,
   Alert,
   Button,
-  Checkbox,
   Container,
-  FormControlLabel,
-  FormGroup,
   IconButton,
   Link,
+  Paper,
   Snackbar,
   TextField,
   Typography,
 } from '@mui/material';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Stack } from '@mui/system';
-import Paper from '@mui/material/Paper';
-import Image from 'next/image';
 
 const LOGIN_URL = '/auth/signin';
 

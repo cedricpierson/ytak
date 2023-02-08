@@ -1,14 +1,9 @@
-import { Avatar, Box, Card, Container, Paper, Stack } from '@mui/material';
-import Grid from '@mui/material/Grid'; // Grid version 1
+import React, { useState, useEffect, useRef } from 'react';
+import { alpha, Avatar, Box, Grid, Container, Button, Stack, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState, useEffect, useRef } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import { motion } from 'framer-motion';
 import NavMarquee from '../../components/navMarquee';
-import AvatarMenu from '../../components/AvatarMenu';
-import { alpha } from '@mui/material';
 
 export async function getStaticPaths() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`);

@@ -1,10 +1,6 @@
-import { Avatar, Box, Card, Container, Paper, Stack } from '@mui/material';
-import Grid from '@mui/material/Grid'; // Grid version 1
-import Image from 'next/image';
+import { Box, Stack, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { useState, useEffect, useRef } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import NavMarquee from '../components/navMarquee';
 import DotsLeftMarquee from '../components/dotsLeftMarquee';
 import DotsRightMarquee from '../components/dotsRightMarquee';
