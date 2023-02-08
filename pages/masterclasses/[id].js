@@ -50,7 +50,7 @@ const Masterclass = ({ playlist }) => {
       document.removeEventListener('mousedown', handler);
     };
   }, [open]);
-  s;
+
   return (
     <Stack sx={{ backgroundColor: 'grey.800', height: '100%' }}>
       <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
