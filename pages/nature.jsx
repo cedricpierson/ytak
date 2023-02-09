@@ -1,9 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { alpha, Avatar, Button, Box, Grid, Container, Typography } from '@mui/material';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
+import AvatarContext from '../context/AvatarContext';
 import axios from 'axios';
 
 export async function getServerSideProps() {
@@ -43,6 +44,8 @@ export async function getServerSideProps() {
 
 const Nature = ({ nature }) => {
   const videoRef = useRef();
+  const { values } = useContext(AvatarContext);
+  const avatar = `http://localhost:5001/${values?.currentUser?.imageUrl}`;
   const [open, setOpen] = useState(false);
   const [video, setVideo] = useState('');
 
@@ -115,7 +118,7 @@ const Nature = ({ nature }) => {
                       borderRadius: '50%',
                     }}
                   >
-                    <Avatar alt="Avatar" src="/images/yavuz.jpg" sx={{ width: 63, height: 63, borderRadius: '50%' }} />
+                    <Avatar alt="Avatar" src={avatar} sx={{ width: 63, height: 63, borderRadius: '50%' }} />
                   </Button>
                 </motion.div>
               </Link>

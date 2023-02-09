@@ -6,7 +6,6 @@ import axios from 'axios';
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
 import NavMarquee from '../components/navMarquee';
-import AvatarMenu from '../components/AvatarMenu';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import {
   Avatar,

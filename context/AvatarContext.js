@@ -14,20 +14,22 @@ export const AvatarContextProvider = ({ children }) => {
 
   useEffect(() => {
     const token = window.localStorage.getItem('accessToken');
-    const decoded = jwt_decode(token);
-    var config = {
-      headers: {
-        'x-accessToken': token,
-      },
-    };
+    if (token) {
+      const decoded = jwt_decode(token);
+      var config = {
+        headers: {
+          'x-accessToken': token,
+        },
+      };
 
-    axios.get(`http://localhost:5001/api/users/${decoded.id}`, config).then((response) => {
-      setValues({ ...values, currentUser: response.data });
-      {
-        window.localStorage.getItem('accessToken');
-        setImage(values.currentUser.imageUrl);
-      }
-    });
+      axios.get(`http://localhost:5001/api/users/${decoded.id}`, config).then((response) => {
+        setValues({ ...values, currentUser: response.data });
+        {
+          window.localStorage.getItem('accessToken');
+          setImage(values?.currentUser?.imageUrl);
+        }
+      });
+    }
   }, [image]);
 
   return <AvatarContext.Provider value={{ image, values }}>{children}</AvatarContext.Provider>;

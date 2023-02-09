@@ -4,12 +4,12 @@ import { useSession, signIn, signOut } from 'next-auth/react';
 import AuthContext from '../context/AuthProvider';
 import axios from './api/axios';
 import jwt_decode from 'jwt-decode';
-import { GoogleIcon, Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
+import GoogleIcon from '@mui/icons-material/Google';
 import {
   Box,
   Input,
   InputLabel,
-  InputAdornment,
   InputAdornment,
   FormControl,
   Alert,

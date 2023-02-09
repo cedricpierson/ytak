@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
-import { useSession, signIn, signOut } from 'next-auth/react';
+// import { useSession, signIn, signOut } from 'next-auth/react';
 import * as Yup from 'yup';
 import axios from 'axios';
 import {
@@ -18,7 +18,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Visibility, VisibilityOff, AccountCircle, GoogleIcon } from '@mui/icons-material';
+import { Visibility, VisibilityOff, AccountCircle } from '@mui/icons-material';
+import GoogleIcon from '@mui/icons-material/Google';
 import { Stack } from '@mui/system';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'dayjs/locale/fr';
@@ -26,7 +27,7 @@ import dayjs from 'dayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import AuthContext from '../context/AuthProvider';
+// import AuthContext from '../context/AuthProvider';
 
 const SignupSchema = Yup.object({
   firstname: Yup.string().min(2, 'Trop court!').max(50, 'Trop long!').required('Obligatoire'),
@@ -48,11 +49,11 @@ const SignupSchema = Yup.object({
 
 const Signup = () => {
   const [birthday, setBirthday] = useState(dayjs());
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const [errMsg, setErrMsg] = useState('');
   const errRef = useRef();
 
-  const { setAuth } = useContext(AuthContext);
+  // const { setAuth } = useContext(AuthContext);
 
   const [values, setValues] = useState({
     showPassword: false,
@@ -147,57 +148,57 @@ const Signup = () => {
       })
       .then(router.push('signin'));
   };
-  if (session) {
-    return (
-      <Stack
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh',
-        }}
-      >
-        <Paper elevation={3}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              flexDirection: 'column',
-              padding: '2rem',
-              backgroundColor: 'primary.lighter',
-            }}
-          >
-            <img
-              src={session.user.image}
-              width="56"
-              height="56"
-              alt=""
-              style={{ borderRadius: '50%', marginBottom: '1rem' }}
-            />
-            <Typography variant="h3" fontFamily="Expletus Sans" color="initial" textAlign="center">
-              Bienvenue {getTitleCase(session.user.name)} <br />
-            </Typography>
-            <Button
-              onClick={() => handleSignOut()}
-              elevation={3}
-              data="signoutGoogle"
-              sx={{
-                marginTop: '2rem',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'grey.700',
-                color: 'white',
-              }}
-            >
-              Se déconnecter
-            </Button>
-          </Box>
-        </Paper>
-      </Stack>
-    );
-  }
+  // if (session) {
+  //   return (
+  //     <Stack
+  //       style={{
+  //         display: 'flex',
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         height: '100vh',
+  //       }}
+  //     >
+  //       <Paper elevation={3}>
+  //         <Box
+  //           sx={{
+  //             display: 'flex',
+  //             justifyContent: 'center',
+  //             alignItems: 'center',
+  //             flexDirection: 'column',
+  //             padding: '2rem',
+  //             backgroundColor: 'primary.lighter',
+  //           }}
+  //         >
+  //           <img
+  //             src={session.user.image}
+  //             width="56"
+  //             height="56"
+  //             alt=""
+  //             style={{ borderRadius: '50%', marginBottom: '1rem' }}
+  //           />
+  //           <Typography variant="h3" fontFamily="Expletus Sans" color="initial" textAlign="center">
+  //             Bienvenue {getTitleCase(session.user.name)} <br />
+  //           </Typography>
+  //           <Button
+  //             onClick={() => handleSignOut()}
+  //             elevation={3}
+  //             data="signoutGoogle"
+  //             sx={{
+  //               marginTop: '2rem',
+  //               display: 'flex',
+  //               justifyContent: 'center',
+  //               alignItems: 'center',
+  //               backgroundColor: 'grey.700',
+  //               color: 'white',
+  //             }}
+  //           >
+  //             Se déconnecter
+  //           </Button>
+  //         </Box>
+  //       </Paper>
+  //     </Stack>
+  //   );
+  // }
   return (
     <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
       {/* Animation Background */}
