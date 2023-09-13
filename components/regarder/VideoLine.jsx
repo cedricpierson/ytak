@@ -1,11 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Button, Grid, Typography } from '@mui/material';
 import Link from 'next/link';
 import { alpha } from '@mui/material';
 
-const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category }) => {
+const VideoLine = ({ data, videoRef, open, video, category }) => {
   return (
     <Grid
       container
@@ -36,7 +36,6 @@ const VideoLine = ({ data, videoRef, open, setOpen, video, setVideo, category })
             >
               <Link href={`/${category}`}>
                 <Button
-                  key={item?.id}
                   sx={{
                     display: 'flex',
                     justifyContent: 'center',

@@ -6,13 +6,13 @@ import DotsLeftMarquee from '../components/dotsLeftMarquee';
 import DotsRightMarquee from '../components/dotsRightMarquee';
 import AvatarMenu from '../components/AvatarMenu';
 import axios from 'axios';
-import { motion } from 'framer-motion';
 import ToTopScroll from '../components/regarder/ToTopScroll';
+import FirstMotionLink from '../components/FirstMotionLink';
+import SecondMotionLink from '../components/SecondMotionLink';
+import ThirdMotionLink from '../components/ThirdMotionLink';
 import dynamic from 'next/dynamic';
 
-const VideoLine = dynamic(() => import('../components/regarder/VideoLine'), {
-  loading: () => 'Chargement...',
-});
+const VideoLine = dynamic(() => import('../components/regarder/VideoLine'), { ssr: false });
 
 export async function getServerSideProps() {
   let playlists;
@@ -20,7 +20,7 @@ export async function getServerSideProps() {
   let travailInde;
   let nature;
 
-  //Digital playlists request
+  //Playlists request
   await axios
     .get(`${process.env.NEXT_PUBLIC_VITE_BACKEND_URL}/api/masterclass`)
     .then((response) => {
@@ -30,13 +30,15 @@ export async function getServerSideProps() {
       console.error(err);
     });
 
-  const playlistsDigital = playlists?.filter((playlist) => playlist.categoryId === 1);
+  // Digital
+  const playlistsDigital = playlists?.filter((playlist) => playlist.categoryId == 1);
   const digitalPromises = playlistsDigital.map((playlist) =>
     axios
       .get(
         `${process.env.NEXT_PUBLIC_YOUTUBE_ENDPOINT}/playlistItems?part=snippet&part=contentDetails&playlistId=${playlist.playlistId}&maxResults=9&key=${process.env.NEXT_PUBLIC_YOUTUBE_API_KEY}`
       )
       .catch((err) => {
+        S;
         console.error(err);
       })
   );
@@ -45,8 +47,8 @@ export async function getServerSideProps() {
     .catch((err) => {
       console.error(err);
     });
-
-  const playlistsTravailInde = playlists?.filter((playlist) => playlist.categoryId === 2);
+  // Travail Indépendant
+  const playlistsTravailInde = playlists?.filter((playlist) => playlist.categoryId == 2);
   const travailIndePromises = playlistsTravailInde.map((playlist) =>
     axios
       .get(
@@ -61,8 +63,8 @@ export async function getServerSideProps() {
     .catch((err) => {
       console.error(err);
     });
-
-  const playlistsNature = playlists?.filter((playlist) => playlist.categoryId === 3);
+  // Nature
+  const playlistsNature = playlists?.filter((playlist) => playlist.categoryId == 3);
   const NaturePromises = playlistsNature.map((playlist) =>
     axios
       .get(
@@ -108,10 +110,10 @@ const Regarder = ({ digital, travailInde, nature }) => {
 
   return (
     <Stack sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div class="bg" />
-      <div class="bg bg2" />
-      <div class="bg bg3" />
-      <div class="content">
+      <div className="bg" />
+      <div className="bg bg2" />
+      <div className="bg bg3" />
+      <div className="content">
         <Box sx={{ backgroundColor: 'grey.800', margin: '0' }}>
           <Box sx={{ margin: '0 2rem 0rem 1.8rem' }}>
             <Box
@@ -167,34 +169,21 @@ const Regarder = ({ digital, travailInde, nature }) => {
             margin: '0.5rem 3rem',
           }}
         >
-          <motion.div
-            whileHover={{
-              scale: 1.1,
-              zIndex: '1',
-              transition: {
-                default: { ease: 'linear' },
-              },
-            }}
-            whileTap={{ scale: 0.8 }}
-          >
-            <Link href="/digital">
-              <Typography variant="h4" color="grey.800">
-                Digital
-              </Typography>
-            </Link>
-          </motion.div>
+          <FirstMotionLink />
         </Box>
-        {digital && (
-          <VideoLine
-            data={digital}
-            videoRef={videoRef}
-            open={open}
-            setOpen={setOpen}
-            video={video}
-            setVideo={setVideo}
-            category={'digital'}
-          />
-        )}
+        <>
+          {digital && (
+            <VideoLine
+              data={digital}
+              videoRef={videoRef}
+              open={open}
+              setOpen={setOpen}
+              video={video}
+              setVideo={setVideo}
+              category={'digital'}
+            />
+          )}
+        </>
         <DotsRightMarquee />
         <Box
           sx={{
@@ -204,34 +193,21 @@ const Regarder = ({ digital, travailInde, nature }) => {
             margin: '0.5rem 3rem',
           }}
         >
-          <motion.div
-            whileHover={{
-              scale: 1.1,
-              zIndex: '1',
-              transition: {
-                default: { ease: 'linear' },
-              },
-            }}
-            whileTap={{ scale: 0.8 }}
-          >
-            <Link href="/travail-independant">
-              <Typography variant="h4" color="grey.800">
-                Travail Indépendant
-              </Typography>
-            </Link>
-          </motion.div>
+          <SecondMotionLink />
         </Box>
-        {travailInde && (
-          <VideoLine
-            data={travailInde}
-            videoRef={videoRef}
-            open={open}
-            setOpen={setOpen}
-            video={video}
-            setVideo={setVideo}
-            category={'travail-independant'}
-          />
-        )}
+        <>
+          {travailInde && (
+            <VideoLine
+              data={travailInde}
+              videoRef={videoRef}
+              open={open}
+              setOpen={setOpen}
+              video={video}
+              setVideo={setVideo}
+              category={'travail-independant'}
+            />
+          )}
+        </>
         <DotsLeftMarquee />
         <Box
           sx={{
@@ -241,34 +217,21 @@ const Regarder = ({ digital, travailInde, nature }) => {
             margin: '0.5rem 3rem',
           }}
         >
-          <motion.div
-            whileHover={{
-              scale: 1.1,
-              zIndex: '1',
-              transition: {
-                default: { ease: 'linear' },
-              },
-            }}
-            whileTap={{ scale: 0.8 }}
-          >
-            <Link href="/nature">
-              <Typography variant="h4" color="grey.800">
-                Nature
-              </Typography>
-            </Link>
-          </motion.div>
+          <ThirdMotionLink />
         </Box>
-        {nature && (
-          <VideoLine
-            data={nature}
-            videoRef={videoRef}
-            open={open}
-            setOpen={setOpen}
-            video={video}
-            setVideo={setVideo}
-            category={'nature'}
-          />
-        )}
+        <>
+          {nature && (
+            <VideoLine
+              data={nature}
+              videoRef={videoRef}
+              open={open}
+              setOpen={setOpen}
+              video={video}
+              setVideo={setVideo}
+              category={'nature'}
+            />
+          )}
+        </>
         {/* <DotsLeftMarquee /> */}
       </div>
       <ToTopScroll />

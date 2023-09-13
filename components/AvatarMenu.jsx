@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useRouter } from 'next/router';
 import { useContext } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 import Box from '@mui/material/Box';
 import { motion } from 'framer-motion';
 import Backdrop from '@mui/material/Backdrop';
@@ -19,15 +20,16 @@ const actions = [
 ];
 
 export default function AvatarMenu() {
+  const { data: session } = useSession();
   const { values } = useContext(AvatarContext);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const avatar = `http://localhost:5001/${values?.currentUser?.imageUrl}`;
   const router = useRouter();
-  const signout = () => {
-    window.localStorage.removeItem('accessToken');
-    window.localStorage.removeItem('isAdmin');
+  const signout = async () => {
+    localStorage.removeItem('isAdmin', 'accessToken');
+    await signOut({ redirect: false });
     router.push('/signin');
   };
   const handleProfile = () => router.push('/profil');

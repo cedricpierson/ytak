@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useContext } from 'react';
+import React, { useRef, useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 import { useSession, signIn, signOut } from 'next-auth/react';
@@ -48,11 +48,9 @@ const SignupSchema = Yup.object({
 });
 
 const Signup = () => {
-  const [birthday, setBirthday] = useState(dayjs());
   const { data: session } = useSession();
   const [errMsg, setErrMsg] = useState('');
   const errRef = useRef();
-
   const { setAuth } = useContext(AuthContext);
 
   const [values, setValues] = useState({
@@ -80,7 +78,7 @@ const Signup = () => {
 
   const [open, setOpen] = useState(false);
 
-  const handleClose = (event, reason) => {
+  const handleClose = (reason) => {
     if (reason === 'clickaway') {
       return;
     }
